@@ -1,53 +1,51 @@
-This is pBibTeX, Version 0.99d-j0.33 (utf8.euc) (TeX Live 2020/W32TeX)
+This is pBibTeX, Version 0.99d-j0.34 (utf8.euc) (TeX Live 2022)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ipsjunsrt.bst
-Database file #1: bibsample.bib
-You're missing a field name---line 15 of file bibsample.bib
- :  
- :  % note =  "（Cooke, E., et al.訳：文書処理システム {\LaTeX}，" #
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-You've used 2 entries,
+Database file #1: biblist.bib
+Warning--I didn't find a database entry for "first"
+Warning--I didn't find a database entry for "second"
+Warning--I didn't find a database entry for "third"
+You've used 0 entries,
             2334 wiz_defined-function locations,
-            573 strings with 4534 characters,
-and the built_in function-call counts, 334 in all, are:
-= -- 19
-> -- 9
+            564 strings with 4340 characters,
+and the built_in function-call counts, 19 in all, are:
+= -- 0
+> -- 0
 < -- 0
-+ -- 4
-- -- 2
-* -- 15
-:= -- 55
-add.period$ -- 2
-call.type$ -- 2
++ -- 0
+- -- 0
+* -- 2
+:= -- 8
+add.period$ -- 0
+call.type$ -- 0
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 24
-empty$ -- 45
-format.name$ -- 3
-if$ -- 80
+cite$ -- 0
+duplicate$ -- 0
+empty$ -- 1
+format.name$ -- 0
+if$ -- 1
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 9
-num.names$ -- 2
-pop$ -- 6
+int.to.str$ -- 0
+missing$ -- 0
+newline$ -- 3
+num.names$ -- 0
+pop$ -- 0
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 17
+skip$ -- 1
 stack$ -- 0
 substring$ -- 0
-swap$ -- 1
-text.length$ -- 1
+swap$ -- 0
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 2
-width$ -- 3
-write$ -- 17
-is.kanji.str$ -- 9
-(There was 1 error message)
+while$ -- 0
+width$ -- 0
+write$ -- 2
+is.kanji.str$ -- 0
+(There were 3 warnings)

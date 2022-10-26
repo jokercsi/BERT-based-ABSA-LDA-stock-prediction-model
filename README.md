@@ -34,7 +34,8 @@ stock price prediction
 ### Development Enviroment
 > #### Software
 > * Windows 10
-> * Python
+> * Python 3.10.8
+> * pip3
 
 > #### Library
 > * transformers
@@ -77,7 +78,7 @@ _Below is an example of how you can instruct your audience on installing and set
    ```
 2. Install packages
     ```sh
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>

@@ -4,3 +4,15 @@ pandas
 yfinance
 matplotlib
 numpy
+
+# tensorflow-gpu  >= 1.11.0  # GPU version of TensorFlow.
+# bert에 필요한 패키지
+tqdm 
+pandas 
+seaborn 
+unidic-lite 
+numpy 
+mecab-python3 
+keras 
+pyknp 
+tensorflow==1.15.5

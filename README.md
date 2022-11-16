@@ -72,6 +72,11 @@ _You need to install all._
 
 _Below is an example of how you can instruct your audience on installing and setting up your app._
 
+
+bert를 사용하기 위한 tensorflow 버전
+https://github.com/google-research/bert/issues/1140
+
+
 1. Clone the repo
    ```sh
    git clone http://133.2.208.93/kim/study_tex.git

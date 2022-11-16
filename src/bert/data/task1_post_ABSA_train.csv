@@ -1,4 +1,4 @@
-﻿|,sentence,info_snippets,info_target,info_sentiment_score,info_aspects
+_key,sentence,info/0/snippets,info/0/sentiment_score,info/0/target,info/0/aspects
 14860,Slowly adding some $FIO here but gotta be careful. This will be one of biggest winners in 2012,['Slowly adding some $FIO here but gotta be careful'],0.459,FIO,['Stock/Price Action/Bullish/Bull Position']
 14864,$TRX http://stks.co/1KkK Long setup. MACD cross.,['Long setup. MACD cross.'],0.438,TRX,['Stock/Technical Analysis']
 14867,I am not optimistic about $amzn both fundementals and charts look like poopoo this quarter.,['both fundementals and charts look like poopoo this quarter.'],-0.506,AMZN,['Stock/Price Action/Bearish']
@@ -74,7 +74,7 @@
 15159,$CERN - consolidating above 50 & 200 MA - nice long entry here w stop below 10 MA - targeting $70 area,['consolidating above 50 & 200 MA'],0.443,CERN,['Stock/Price Action/Bullish/Bullish Behavior']
 15162,$SPY http://stks.co/1MiR We're holding above Wednesday and Thursday closes. I'm leaning bullish. Small postions. Waiting.,"[""We're holding above Wednesday and Thursday closes. I'm leaning bullish""]",0.316,SPY,['Stock/Price Action/Bullish']
 15167,$RDC Rowan Expands Share Repurchase Program to $150 million,['Rowan Expands Share Repurchase Program'],0.285,RDC,['Stock/Fundamentals/Share Buyback']
-15175,$NVDA sideways,['sideways'],0,NVDA,['Stock/Price Action']
+15175,$NVDA sideways,['sideways'],0.0,NVDA,['Stock/Price Action']
 15176,$HITK  Resuming advance into new historical highs.,['Resuming advance into new historical highs.'],0.68,HITK,['Stock/Price Action/Current Price/52-Week High']
 15188,Held its recent double bottom buy point of 56.57 almost to the penny today $WMT http://chart.ly/6nosp5q,['Held its recent double bottom buy point'],0.198,WMT,['Stock/Technical Analysis']
 15194,$GOOG breakout very likely medium target $700+ http://stks.co/1Lpz http://chart.ly/lgb94rr,['breakout very likely'],0.518,GOOG,['Stock/Technical Analysis/Breakout']

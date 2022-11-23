@@ -26,6 +26,7 @@ import optimization
 import tokenization
 import tensorflow as tf
 
+# 
 flags = tf.flags
 
 FLAGS = flags.FLAGS
@@ -174,6 +175,11 @@ class InputFeatures(object):
     self.is_real_example = is_real_example
 
 
+
+# 여기 까지 No 변경
+
+
+
 class DataProcessor(object):
   """Base class for data converters for sequence classification data sets."""
 
@@ -202,6 +208,75 @@ class DataProcessor(object):
       for line in reader:
         lines.append(line)
       return lines
+
+  @classmethod
+  def _read_csv(cls, input_file):
+      df = pd.read_csv(input_file)
+
+      if FLAGS.task_name == "livedoor" and FLAGS.do_predict:
+          df.to_csv(FLAGS.output_dir + "/test_df.csv", index=False)
+      return df
+
+  # @classmethod
+  # def _tweet_from_read_csv(
+  #     cls=None,
+  #     tweet_input_dir="/data/twitter",
+  #     train_label_file=None,
+  #     validation_label_file=None,
+  #     test_label_file=None,
+  # ):
+  #     tweet_file_names = [
+  #         "rain_20191122.csv",
+  #         "rain_20200123.csv",
+  #         "typhoon_2019_15.csv",
+  #         "typhoon_2019_19-001.csv",
+  #         "typhoon_2019_21.csv",
+  #     ]
+
+  #     df_ = []
+  #     for tweet_file_name in tweet_file_names:
+  #         df_.append(
+  #             pd.read_csv(
+  #                 tweet_input_dir + "/" + tweet_file_name,
+  #                 names=[
+  #                     "Tweet",
+  #                     "TweetID",
+  #                     "UserID",
+  #                     "ScreenName",
+  #                     "UserName",
+  #                     "Date",
+  #                 ],
+  #                 encoding="utf-8",
+  #                 header=None,
+  #             )
+  #         )
+  #     tweet_df = pd.concat(df_, ignore_index=True)
+  #     tweet_df = tweet_df.drop(columns=["UserID", "ScreenName", "UserName", "Date"])
+
+  #     train_labeled_df, validation_labeled_df, test_labeled_df = (
+  #         pd.DataFrame(),
+  #         pd.DataFrame(),
+  #         pd.DataFrame(),
+  #     )
+  #     if FLAGS.do_train:
+  #         train_label_df = pd.read_csv(train_label_file)
+  #         train_labeled_df = pd.merge(tweet_df, train_label_df, on="TweetID")
+  #     if FLAGS.do_eval:
+  #         # validation_label_df = pd.read_csv(validation_label_file)
+  #         validation_label_df = pd.read_csv(test_label_file)
+  #         validation_labeled_df = pd.merge(
+  #             tweet_df, validation_label_df, on="TweetID"
+  #         )
+  #     if FLAGS.do_predict:
+  #         test_label_df = pd.read_csv(test_label_file)
+  #         test_labeled_df = pd.merge(tweet_df, test_label_df, on="TweetID")
+  #         test_labeled_df_to_save = test_labeled_df.drop(columns=["Tweet"])
+  #         test_labeled_df_to_save.to_csv(
+  #             FLAGS.output_dir + "/test_df.csv", index=False
+  #         )
+
+  #     return [train_labeled_df, validation_labeled_df, test_labeled_df]
+
 
 
 class XnliProcessor(DataProcessor):

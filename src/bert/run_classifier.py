@@ -26,7 +26,7 @@ import optimization
 import tokenization
 import tensorflow as tf
 
-# 
+
 flags = tf.flags
 
 FLAGS = flags.FLAGS

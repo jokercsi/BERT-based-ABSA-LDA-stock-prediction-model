@@ -51,17 +51,21 @@ stock price prediction
 > - matplotlib
 >   &nbsp;
 
-### Data
+### Dataset
 
-- Text Data : [Headlines related to U.S. businesses (Kaggle)](https://www.kaggle.com/datasets/notlucasp/financial-news-headlines)
-  1. CNBC
-  2. The Guardian
-  3. Reuters
-- Stock Price Data : [3 Major U.S. Indexes (Yahoo! Finance)](https://finance.yahoo.com/)
+> #### Text Data : [Headlines related to U.S. businesses (Kaggle)](https://www.kaggle.com/datasets/notlucasp/financial-news-headlines)
+>
+> 1.  CNBC
+> 2.  The Guardian
+> 3.  Reuters
 
-  1. S&P 500 (^GSPC)
-  2. NASDAQ Composite (^IXIC)
-  3. Dow Jones Industrial Average (^DJI)
+> #### Stock Price Data : [3 Major U.S. Stock Indexes (Yahoo! Finance)](https://finance.yahoo.com/)
+>
+> 1.  S&P 500 (^GSPC)
+> 2.  NASDAQ Composite (^IXIC)
+> 3.  Dow Jones Industrial Average (^DJI)
+
+[How to Download the Dataset?](DATASET.md)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

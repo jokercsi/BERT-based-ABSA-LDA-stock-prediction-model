@@ -1,7 +1,8 @@
 <div id="top"></div>
 
-# BERT based Aspect-Based Sentiment Analysis with LDA topic model for stock price prediction 
-観点感情分析結果を利用したトピックモデルによる株価推定 
+# BERT based Aspect-Based Sentiment Analysis with LDA topic model for stock price prediction
+
+観点感情分析結果を利用したトピックモデルによる株価推定
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -27,43 +28,47 @@
 </br>
 
 ## Overview
+
 stock price prediction
 &nbsp;
 </br>
 </br>
+
 ### Development Enviroment
+
 > #### Software
-> * Windows 10
-> * Python 3.10.8
-> * pip3
+>
+> - Windows 10
+> - Python 3.10.8
+> - pip3
 
 > #### Library
-> * transformers
-> * yfinance
-> * pandas
-> * numpy
-> * matplotlib
-&nbsp;
-
-
+>
+> - transformers
+> - yfinance
+> - pandas
+> - numpy
+> - matplotlib
+>   &nbsp;
 
 > ### Data
-> * [Investing.com](https://www.investing.com/) (News Text Data)
-> * [Yahoo! Finance](https://finance.yahoo.com/) (Stock Price Data)
-
+>
+> - [Investing.com](https://www.investing.com/) (News Text Data)
+> - [Yahoo! Finance](https://finance.yahoo.com/) (Stock Price Data)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
+
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
 _You need to install all._
-* npm
+
+- npm
   ```sh
   npm install npm@latest -g
   ```
@@ -72,28 +77,25 @@ _You need to install all._
 
 _Below is an example of how you can instruct your audience on installing and setting up your app._
 
-
 bert를 사용하기 위한 tensorflow 버전
 https://github.com/google-research/bert/issues/1140
 
-
 1. Clone the repo
    ```sh
-   git clone http://133.2.208.93/kim/study_tex.git
+   git clone http://133.2.208.93/kim/absa-lda-stock-prediction.git
    ```
 2. Install packages
-    ```sh
-    pip3 install -r requirements.txt
-    ```
+   ```sh
+   pip3 install -r requirements.txt
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
-show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. 
+show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space.
 
 _For more examples_
 

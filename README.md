@@ -55,9 +55,9 @@ stock price prediction
 
 > #### Text Data : [Headlines related to U.S. businesses (Kaggle)](https://www.kaggle.com/datasets/notlucasp/financial-news-headlines)
 >
-> 1.  CNBC
-> 2.  The Guardian
-> 3.  Reuters
+> 1.  CNBC (2017/12/22 - 2020/7/17)
+> 2.  The Guardian (2017/12/17 - 2020/7/18)
+> 3.  Reuters (2018/3/20 - 2020/7/18)
 
 > #### Stock Price Data : [3 Major U.S. Stock Indexes (Yahoo! Finance)](https://finance.yahoo.com/)
 >

@@ -20,6 +20,7 @@ def stopword(data_path):
     return stopwords
 
 def make_df(data_path):
+    
     news_csv = data_path.glob("*.csv")
     pd.set_option("display.max_colwidth", 5400)
     pd.set_option("display.max_rows", 5000)
@@ -72,10 +73,12 @@ def Morphological(article, stopwords):
 
 def get_wordlist_in_text(args):
 
+    # path 지정
     path_stopwords = pathlib.Path(args.stopword)
     path_data = pathlib.Path(args.news)
     path_output = pathlib.Path(args.output)
 
+    # 함수 사용
     news = make_df(path_data)
     stopwords = stopword(path_stopwords)
 

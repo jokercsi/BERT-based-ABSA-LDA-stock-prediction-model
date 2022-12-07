@@ -1,24 +1,27 @@
 import argparse
 import pathlib # pathlib 모듈의 기본 아이디어는 파일시스템 경로를 단순한 문자열이 아니라 객체로 다루자는 것입니다. 
-import re
 import pandas as pd
+import os
 
 def parser_args():
 
-    parser = argparse.ArgumentParser()
+    #현재 위치 확인
+    cwd = os.getcwd()
+    print(cwd)
 
-    parser.add_argument("-s", "--stopword", default="./../data/stopword.txt")               # Stopword 지정
-    parser.add_argument("-n", "--news", default="./../data/text")                           # Dateset 지정
-    parser.add_argument("-o", "--output", default="./../data/output_morphological.csv")     # OUTPUT 지정
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--stopword", default="./data/stopword.txt")               # Stopword 지정
+    parser.add_argument("-n", "--news", default="./data/text")                           # Dateset 지정
+    parser.add_argument("-o", "--output", default="./data/output_morphological.csv")     # OUTPUT 지정
 
     return parser.parse_args()
 
-def stopword(data_path):
-    with open(data_path, "r", encoding="utf-8") as f:
-        stopwords = [w.strip() for w in f]
-        stopwords = set(stopwords)
-        f.close()
-    return stopwords
+# def stopword(data_path):
+#     with open(data_path, "r", encoding="utf-8") as f:
+#         stopwords = [w.strip() for w in f]
+#         stopwords = set(stopwords)
+#         f.close()
+#     return stopwords
 
 def make_df(data_path):
     # glob() = 파라미터에 명시된 저장 경로와 패턴에 해당하는 파일명을 리스트 형식으로 반환한다.
@@ -26,22 +29,18 @@ def make_df(data_path):
     # pd.set_option("display.max_colwidth", 5400)
     # pd.set_option("display.max_rows", 5000)
 
+    #print(list(news_csv))  # csv 파일 확인
     news = pd.DataFrame()
     for f in news_csv:
+        print(f)
         tmp = pd.read_csv(f, encoding="utf8")
-        print(tmp)
 
-        # tmp = tmp[
-        #     (tmp["本文"] != "【現在著作権交渉中の為、本文は表示できません】")
-        #     & ((tmp["面種別名"] == "経済面") | (tmp["面種別名"] == "経済"))
-        #     & (tmp["発行区分"] == "朝刊")
-        # ]
-        # news = pd.concat([news, tmp], axis=0)
-    # news["掲載日"] = news["掲載日"].astype(int)
-    # news = news.sort_values("掲載日")
+        # tmp = tmp[(tmp["本文"] != "【現在著作権交渉中の為、本文は表示できません】") & ((tmp["面種別名"] == "経済面") | (tmp["面種別名"] == "経済")) & (tmp["発行区分"] == "朝刊")]
+        #news = pd.concat([news, tmp], axis=0)
+    # news["Date"] = news["Date"].astype(int)
+    # news = news.sort_values("Date")
     # news = news.reset_index(drop=True)
-
-    return news
+    return news_csv
 
 
 # def Morphological(article, stopwords):

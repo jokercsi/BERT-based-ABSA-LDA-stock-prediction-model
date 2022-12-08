@@ -1,6 +1,7 @@
 matplotlib
 scikit-learn
 monthdelta
+nltk
 
 findfile>=1.7.10
 autocuda>=0.12

@@ -2,12 +2,18 @@ import argparse
 import pathlib # pathlib 모듈의 기본 아이디어는 파일시스템 경로를 단순한 문자열이 아니라 객체로 다루자는 것입니다. 
 import pandas as pd
 import os
+from tqdm import tqdm
 
 # 형태소 분석 nltk
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.tokenize import sent_tokenize
 from nltk.tag import pos_tag
+from nltk.stem import WordNetLemmatizer
+
+nltk.download('punkt')  #토큰화
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 def parser_args():
 
@@ -36,8 +42,7 @@ def make_df(data_path):
     # pd.set_option("display.max_colwidth", 5400)
     # pd.set_option("display.max_rows", 5000)
     news = pd.DataFrame()
-    for f in news_csv:
-        print(f)
+    for f in news_csv:  # csv 파일 하나씩 읽기
         tmp = pd.read_csv(f, encoding="utf8")   # 각각 파일의 읽은 내용
         news = pd.concat([news, tmp], axis=0)   # 하나로 합치기
     news['Date'] = pd.to_datetime(news['Date'], errors='raise') # 시간 형식 통일하기
@@ -50,33 +55,45 @@ def make_df(data_path):
 # 
 def Morphological(article, stopwords):
 
-    mecab = MeCab.Tagger(r'-Owakati -d "./../data/mecab-ipadic-neologd"')
-    text = article[8]
-    text_out = ""
-    text_result = ""
-    node = mecab.parseToNode(text)
-    while node:
-        f = node.feature.split(",")
-        for stopword in stopwords:
-            if f[6] == stopword:
-                f[6] = "*"
-        if (f[6] != "*") and (f[0] == "名詞"):
-            text_out += f[6] + " "
-        node = node.next
-    text_out = text_out.replace("\u3000", "").replace("\n", "")
-    text_out = re.sub(
-        r"[0123456789０１２３４５６７８９！＠＃＄％＾＆\-|\\＊\“（）＿■×※⇒—●(：〜＋=)／*&^%$#@!~`){}…\[\]\"\'\”:;<>?＜＞？、。・,./『』【】「」→←○]+",
-        "",
-        text_out,
-    )
-    sentense = text_out.split(" ")
-    sentense = list(filter(("").__ne__, sentense))
+    #mecab = MeCab.Tagger(r'-Owakati -d "./../data/mecab-ipadic-neologd"')
+    headline= article[0]
+    date = article[1]
+    description = article[2]
 
-    for word in sentense:
-        text_result += word + " "
+    headline = nltk.word_tokenize(headline) # 토큰화
 
-    return text_result, len(sentense)
+    mwtokenizer = nltk.MWETokenizer(separator='')
+    mwtokenizer.add_mwe(('S', '&', 'P'))
+    headline = mwtokenizer.tokenize(headline)
 
+    headline = [word for word in headline if word not in (stopwords)]   #against, be, of, a, in, to 등의 단어가 제거 된걸 확인 할 수 있다.
+    headline = [WordNetLemmatizer().lemmatize(word, pos='v') for word in headline]  #표제어 추출을 수행합니다. 표제어 추출로 3인칭 단수 표현을 1인칭으로 바꾸고, 과거 현재형 동사를 현재형으로 바꿉니다.
+    headline = [word for word in headline if len(word) > 2]     #길이가 2이하인 단어에 대해서 제거하는 작업을 수행합니다.
+    # text_out = ""
+    # text_result = ""
+    # node = mecab.parseToNode(text)
+    # while node:
+    #     f = node.feature.split(",")
+    #     for stopword in stopwords:
+    #         if f[6] == stopword:
+    #             f[6] = "*"
+    #     if (f[6] != "*") and (f[0] == "名詞"):
+    #         text_out += f[6] + " "
+    #     node = node.next
+    # text_out = text_out.replace("\u3000", "").replace("\n", "")
+    # text_out = re.sub(
+    #     r"[0123456789０１２３４５６７８９！＠＃＄％＾＆\-|\\＊\“（）＿■×※⇒—●(：〜＋=)／*&^%$#@!~`){}…\[\]\"\'\”:;<>?＜＞？、。・,./『』【】「」→←○]+",
+    #     "",
+    #     text_out,
+    # )
+    # sentense = text_out.split(" ")
+    # sentense = list(filter(("").__ne__, sentense))
+
+    # for word in sentense:
+    #     text_result += word + " "
+
+    #return text_result, len(sentense)
+    return headline
 
 def get_wordlist_in_text(args):
 
@@ -100,10 +117,15 @@ def get_wordlist_in_text(args):
     articles = []
     word_len = []
 
-    for sentense in tqdm(news.values):
-        word_list = Morphological(sentense, stopwords)
-        word_len.append(word_list[1])
-        articles.append(word_list[0])
+    #print(news.values)
+
+    # tqdm() 함수 : 진행상황을 보여준다
+    for article in tqdm(news.values):
+        #print(article)
+        word_list = Morphological(article, stopwords)
+        print(word_list)
+    #     word_len.append(word_list[1])
+    #     articles.append(word_list[0])
 
     # for i, (article, word) in enumerate(zip(articles, word_len)):
     #     news.loc[i, "本文"] = article

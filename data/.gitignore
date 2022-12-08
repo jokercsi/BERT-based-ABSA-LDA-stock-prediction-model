@@ -1,3 +1,1 @@
-/cnbc_headlines.csv
-/guardian_headlines.csv
-/reuters_headlines.csv
+text/*.csv

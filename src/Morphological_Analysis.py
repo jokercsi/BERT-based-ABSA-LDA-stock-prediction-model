@@ -55,10 +55,7 @@ def make_df(data_path):
 # 
 def Morphological(article, stopwords):
 
-    #mecab = MeCab.Tagger(r'-Owakati -d "./../data/mecab-ipadic-neologd"')
-    headline= article[0]
-    date = article[1]
-    description = article[2]
+    headline= article[0] # 뉴스 기사의 첫번째 컬럼
 
     headline = nltk.word_tokenize(headline) # 토큰화
 
@@ -68,32 +65,14 @@ def Morphological(article, stopwords):
 
     headline = [word for word in headline if word not in (stopwords)]   #against, be, of, a, in, to 등의 단어가 제거 된걸 확인 할 수 있다.
     headline = [WordNetLemmatizer().lemmatize(word, pos='v') for word in headline]  #표제어 추출을 수행합니다. 표제어 추출로 3인칭 단수 표현을 1인칭으로 바꾸고, 과거 현재형 동사를 현재형으로 바꿉니다.
-    headline = [word for word in headline if len(word) > 2]     #길이가 2이하인 단어에 대해서 제거하는 작업을 수행합니다.
-    # text_out = ""
-    # text_result = ""
-    # node = mecab.parseToNode(text)
-    # while node:
-    #     f = node.feature.split(",")
-    #     for stopword in stopwords:
-    #         if f[6] == stopword:
-    #             f[6] = "*"
-    #     if (f[6] != "*") and (f[0] == "名詞"):
-    #         text_out += f[6] + " "
-    #     node = node.next
-    # text_out = text_out.replace("\u3000", "").replace("\n", "")
-    # text_out = re.sub(
-    #     r"[0123456789０１２３４５６７８９！＠＃＄％＾＆\-|\\＊\“（）＿■×※⇒—●(：〜＋=)／*&^%$#@!~`){}…\[\]\"\'\”:;<>?＜＞？、。・,./『』【】「」→←○]+",
-    #     "",
-    #     text_out,
-    # )
-    # sentense = text_out.split(" ")
-    # sentense = list(filter(("").__ne__, sentense))
+    #headline = [word for word in headline if len(word) > 2]     #길이가 2이하인 단어에 대해서 제거하는 작업을 수행합니다.
 
-    # for word in sentense:
-    #     text_result += word + " "
+    text_result = ""    # list를 string 형태로 바꾸기 위함
 
-    #return text_result, len(sentense)
-    return headline
+    for word in headline:
+        text_result += word + " "
+
+    return text_result
 
 def get_wordlist_in_text(args):
 
@@ -114,24 +93,23 @@ def get_wordlist_in_text(args):
     #print(stopwords)
 
 
-    articles = []
-    word_len = []
 
     #print(news.values)
+    articles = []
 
     # tqdm() 함수 : 진행상황을 보여준다
     for article in tqdm(news.values):
         #print(article)
         word_list = Morphological(article, stopwords)
-        print(word_list)
-    #     word_len.append(word_list[1])
-    #     articles.append(word_list[0])
+        articles.append(word_list)
+        #print(articles)
 
-    # for i, (article, word) in enumerate(zip(articles, word_len)):
-    #     news.loc[i, "本文"] = article
-    #     news.loc[i, "文字数"] = word
 
-    # news.to_csv(path_output)
+    for i, article in enumerate(articles):
+        # print(i, article)
+        news.loc[i, "after_headlines"] = article
+
+    news.to_csv(path_output, encoding="utf-8")
 
 
 # 함수들 호츌

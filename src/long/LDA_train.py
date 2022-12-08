@@ -1,25 +1,30 @@
 import argparse
+import os
 
 from LDA import LDA_est
 
 
 def parser_args():
 
+    #현재 위치 확인
+    cwd = os.getcwd()
+    print("current location is :", cwd)
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "-lda", "--lda", default="./../../lda/src", help="lda/srcまでの相対パス"
+        "-lda", "--lda", default="./lda/src", help="lda/srcまでの相対パス"
     )
     parser.add_argument(
         "-train",
         "--train",
-        default="./../../data/train/train.txt",
+        default="./data/train/train.txt",
         help="lda/srcから推定データまでの相対パス",
     )
     parser.add_argument(
         "-current",
         "--current",
-        default="./../../src/long/",
+        default="./src/long/",
         help="lda/srcから現在のフォルダまでの相対パス",
     )
     parser.add_argument("-alpha", "--alpha", default=0.1)

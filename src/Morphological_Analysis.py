@@ -60,10 +60,11 @@ def Morphological(article, stopwords):
     headline = nltk.word_tokenize(headline) # 토큰화
 
     mwtokenizer = nltk.MWETokenizer(separator='')
-    mwtokenizer.add_mwe(('S', '&', 'P'))
+    mwtokenizer.add_mwe(('S', '&', 'P'), ('AT', '&', 'T'))
     headline = mwtokenizer.tokenize(headline)
 
-    headline = [word for word in headline if word not in (stopwords)]   #against, be, of, a, in, to 등의 단어가 제거 된걸 확인 할 수 있다.
+    headline = [word for word in headline if word not in (stopw
+    ords)]   #against, be, of, a, in, to 등의 단어가 제거 된걸 확인 할 수 있다.
     headline = [WordNetLemmatizer().lemmatize(word, pos='v') for word in headline]  #표제어 추출을 수행합니다. 표제어 추출로 3인칭 단수 표현을 1인칭으로 바꾸고, 과거 현재형 동사를 현재형으로 바꿉니다.
     #headline = [word for word in headline if len(word) > 2]     #길이가 2이하인 단어에 대해서 제거하는 작업을 수행합니다.
 

@@ -1,3 +1,5 @@
-
 # for input dataset
 data/*.csv
+
+
+lda/

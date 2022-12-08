@@ -7,32 +7,37 @@ import warnings
 import numpy as np
 import pandas as pd
 import tqdm
+import os
 from LDA import LDA_inf
 
 warnings.filterwarnings("ignore")
 
-path_data = "./../../data/"
-path_pkl = "./../../data/pkl/long/"
+path_data = "./data/"
+path_pkl = "./data/pkl/long/"
 
 
 def parser_args():
 
+    #현재 위치 확인
+    cwd = os.getcwd()
+    print("current location is :", cwd)
+
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-n", "--news", default="./../../data/Morphological_data.csv")
+    parser.add_argument("-n", "--news", default="./data/output_morphological.csv")
 
-    parser.add_argument("-list", "--company_list", default="car_list.txt")
+    parser.add_argument("-list", "--company_list", default="stock_index.txt")
 
-    parser.add_argument("-stock", "--stock", default="TOPIX10C_CAR")
+    parser.add_argument("-stock", "--stock", default="price")
 
     parser.add_argument(
-        "-lda", "--lda", default="./../../lda/src", help="現在のフォルダからlda/srcまでの相対パス"
+        "-lda", "--lda", default="./lda/src", help="現在のフォルダからlda/srcまでの相対パス"
     )
 
     parser.add_argument(
         "-train",
         "--train",
-        default="./../../data/train/",
+        default="./data/train/",
         help="lda/srcから学習済みLDAモデルがあるフォルダまでの相対パス",
     )
     parser.add_argument(
@@ -44,13 +49,13 @@ def parser_args():
     parser.add_argument(
         "-vector",
         "--vector",
-        default="./../../data/vector",
+        default="./data/vector",
         help="現在のフォルダから日付ごとに新聞記事を作成するフォルダまでの相対パス",
     )
     parser.add_argument(
         "-current",
         "--current",
-        default="./../../src/long/",
+        default="./src/long/",
         help="lda/srcから現在のフォルダまでの相対パス",
     )
 
@@ -82,7 +87,8 @@ def read_company_list(path_company_list):
     return company
 
 
-def read_csv(path_news, path_stock):
+# 가격 데이터 읽는 함수
+def read_csv(path_news, path_stock): 
 
     news_df = pd.read_csv(path_news, encoding="utf8")
     file_names = path_stock.glob("*.csv")
@@ -90,9 +96,12 @@ def read_csv(path_news, path_stock):
     date = []
     for f in file_names:
         stock_df = pd.read_csv(f, encoding="CP932")
-        if len(stock_df) == 1219:
-            date.extend([int(t.replace("-", "")) for t in stock_df["日付"]])
+        #print(stock_df)
+
+        if len(stock_df) == 649:
+            date.extend([int(t.replace("-", "")) for t in stock_df["Date"]])
     date_list = sorted(list(set(date)))
+    print(date_list)
 
     return news_df, date_list
 
@@ -120,8 +129,8 @@ def extract_news(company_list, date_list, news_df):
         company_index_list = [[] for i in range(len(company_list))]
 
         for news, index in zip(
-            news_df[news_df["掲載日"] == date].values,
-            news_df[news_df["掲載日"] == date].index,
+            news_df[news_df["Date"] == date].values,
+            news_df[news_df["Date"] == date].index,
         ):
 
             relation_list = check_company_noun(news, company_list)
@@ -145,7 +154,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
             if v != []:
                 text = []
                 for idx in v:
-                    text.append(news["本文"][idx])
+                    text.append(news["after_headlines"][idx])
 
                 if not os.path.exists(path / company_list[j]):
                     (path / company_list[j]).mkdir()
@@ -165,7 +174,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
 def LDA(args, company_id, date_list, company_index_dict):
 
-    path_lda = pathlib.Path(args.lda)
+    path_lda = pathlib.Path(args.lda)   #./lda/src
     train = args.train
     test = args.test
     path_return = pathlib.Path(args.current)
@@ -220,15 +229,16 @@ def output(data, path_output):
 if __name__ == "__main__":
 
     args = parser_args()
-    path_news = pathlib.Path(args.news)
-    path_stock = pathlib.Path(path_data + args.stock)
-    path_vector = pathlib.Path(args.vector)
-    path_list = pathlib.Path(path_data + args.company_list)
+    path_news = pathlib.Path(args.news)                     # data\output_morphological.csv
+    path_stock = pathlib.Path(path_data + args.stock)       # data\price
+    path_vector = pathlib.Path(args.vector)                 # data\vector
+    path_list = pathlib.Path(path_data + args.company_list) # data\stock_index.txt
 
-    company_id = read_company_id(path_stock)
-    company_list = read_company_list(path_list)
+    company_id = read_company_id(path_stock)                # ['Dow', 'Nasdaq', 'SnP']
+    company_list = read_company_list(path_list)             # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'], ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
 
-    news, date_list = read_csv(path_news, path_stock)
+    news, date_list = read_csv(path_news, path_stock)       # news : df  , 
+    print(date_list)
     company_index_dict = extract_news(company_list, date_list, news)
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
 

@@ -1,5 +1,5 @@
-# for input dataset
+# dataset 은 보내지 말기
 data/*.csv
-
+data/
 
 lda/

@@ -90,24 +90,24 @@ def read_company_list(path_company_list):
 # 가격 데이터 읽는 함수
 def read_csv(path_news, path_stock): 
 
-    news_df = pd.read_csv(path_news, encoding="utf8")
+
+    news_df = pd.read_csv(path_news, encoding="utf8")    # news_df : output_morpological을 읽음
     file_names = path_stock.glob("*.csv")
 
     date = []
-    for f in file_names:
-        stock_df = pd.read_csv(f, encoding="CP932")
-        #print(stock_df)
-
+    for f in file_names:    # f는 파일 경로
+        stock_df = pd.read_csv(f, encoding="CP932") # df 가격 파일 데이터 가져오기
         if len(stock_df) == 649:
-            date.extend([int(t.replace("-", "")) for t in stock_df["Date"]])
-    date_list = sorted(list(set(date)))
-    print(date_list)
+            date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
+
+    date_list = sorted(list(set(date))) # 가격 데이터의 날짜 모두 가져오기
+    # print(date_list) 
 
     return news_df, date_list
 
 
 def check_company_noun(news, company_list):
-    text = news[8] + " " + news[9]
+    text = news[1] + " " + news[2]
 
     noun = text.split(" ")
     noun = list(filter(("").__ne__, noun))
@@ -125,14 +125,19 @@ def check_company_noun(news, company_list):
 def extract_news(company_list, date_list, news_df):
     company_index_dict = dict()
 
-    for date in tqdm.tqdm(date_list):
-        company_index_list = [[] for i in range(len(company_list))]
+    # 날짜 데이터 형식 바꾸기
+    news_df['Date'] = pd.to_datetime(news_df['Date'])
+    news_df['Date'] = news_df["Date"].dt.strftime('%Y%m%d')
+    print(news_df['Date'])
 
+    for date in tqdm.tqdm(date_list):   # 가격의 날짜
+        company_index_list = [[] for i in range(len(company_list))] # len(company_list) : 3
+        
+        #print(news_df[news_df["Date"] == date].columns['after_headlines'])
         for news, index in zip(
-            news_df[news_df["Date"] == date].values,
+            news_df[news_df["Date"] == date].columns,
             news_df[news_df["Date"] == date].index,
         ):
-
             relation_list = check_company_noun(news, company_list)
 
             if relation_list != []:
@@ -237,9 +242,9 @@ if __name__ == "__main__":
     company_id = read_company_id(path_stock)                # ['Dow', 'Nasdaq', 'SnP']
     company_list = read_company_list(path_list)             # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'], ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
 
-    news, date_list = read_csv(path_news, path_stock)       # news : df  , 
-    print(date_list)
+    news, date_list = read_csv(path_news, path_stock)       # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
     company_index_dict = extract_news(company_list, date_list, news)
+    print(company_index_dict)
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
 
     LDA(args, company_id, date_list, company_index_dict)

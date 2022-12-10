@@ -107,8 +107,8 @@ def read_csv(path_news, path_stock):
 
 
 def check_company_noun(news, company_list):
-    text = news[1] + " " + news[2]
-
+    text = news[4]
+    #text = 'x a x'
     noun = text.split(" ")
     noun = list(filter(("").__ne__, noun))
     check_list = []
@@ -128,14 +128,16 @@ def extract_news(company_list, date_list, news_df):
     # 날짜 데이터 형식 바꾸기
     news_df['Date'] = pd.to_datetime(news_df['Date'])
     news_df['Date'] = news_df["Date"].dt.strftime('%Y%m%d')
-    print(news_df['Date'])
+    news_df['Date'] = news_df['Date'].astype(int)
+    #print(news_df['Date'])
 
     for date in tqdm.tqdm(date_list):   # 가격의 날짜
         company_index_list = [[] for i in range(len(company_list))] # len(company_list) : 3
-        
-        #print(news_df[news_df["Date"] == date].columns['after_headlines'])
+        #print(type(news_df["Date"]))
+        #print(type(date))
+        #print(news_df[news_df["Date"] == date].values)
         for news, index in zip(
-            news_df[news_df["Date"] == date].columns,
+            news_df[news_df["Date"] == date].values,
             news_df[news_df["Date"] == date].index,
         ):
             relation_list = check_company_noun(news, company_list)
@@ -182,7 +184,7 @@ def LDA(args, company_id, date_list, company_index_dict):
     path_lda = pathlib.Path(args.lda)   #./lda/src
     train = args.train
     test = args.test
-    path_return = pathlib.Path(args.current)
+    path_return = os.getcwd()
 
     niters = args.niters
     twords = args.twords
@@ -244,7 +246,7 @@ if __name__ == "__main__":
 
     news, date_list = read_csv(path_news, path_stock)       # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
     company_index_dict = extract_news(company_list, date_list, news)
-    print(company_index_dict)
+    #print(company_index_dict)
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
 
-    LDA(args, company_id, date_list, company_index_dict)
+    #LDA(args, company_id, date_list, company_index_dict)

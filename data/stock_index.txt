@@ -1,3 +1,3 @@
 Dow, DJI
 NASDAQ, Nasdaq, IXIC
-S&P500, S&P, s&p500, GSPC, SPX
+S&P 500, S&P, s&p 500, GSPC, SPX

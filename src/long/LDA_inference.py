@@ -110,15 +110,15 @@ def check_company_noun(news, company_list):
     text = news[4]
     #text = 'x a x'
     noun = text.split(" ")
-    noun = list(filter(("").__ne__, noun))
+    noun = list(filter(("").__ne__, noun))  # 뉴스 기사를 단어 단위로 나눔
     check_list = []
+    #print(noun)
 
     for i, company_name in enumerate(company_list):
         for name in company_name:
             if name in noun:
                 check_list.append(i)
                 break
-
     return check_list
 
 
@@ -149,9 +149,12 @@ def extract_news(company_list, date_list, news_df):
     return company_index_dict
 
 
+# 뉴스 기사에 stock_index 리스트의 단어가 있으면 폴더 만들기
 def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
     for i, date in enumerate(date_list):
+
+
         path = data_path / str(date)
 
         if not os.path.exists(path):
@@ -166,6 +169,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
                 if not os.path.exists(path / company_list[j]):
                     (path / company_list[j]).mkdir()
 
+                # vector.txt 열기;
                 file_out = open(
                     path / company_list[j] / "vector.txt", "w", encoding="utf_8"
                 )
@@ -245,8 +249,8 @@ if __name__ == "__main__":
     company_list = read_company_list(path_list)             # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'], ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
 
     news, date_list = read_csv(path_news, path_stock)       # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
-    company_index_dict = extract_news(company_list, date_list, news)
+    company_index_dict = extract_news(company_list, date_list, news)    # stock_index 리스트에 있는 단어가 포함된 뉴스만 뽑아오기
     #print(company_index_dict)
-    make_folder(path_vector, date_list, company_index_dict, company_id, news)
-
-    #LDA(args, company_id, date_list, company_index_dict)
+    make_folder(path_vector, date_list, company_index_dict, company_id, news)   # 폴더 만들기 (data\vector, 가격 데이터의 날짜, stock_index의 단어가 포함된 뉴스, ['Dow', 'Nasdaq', 'SnP'], 데이터 마이닝 후의 텍스트 데이터)
+ 
+    LDA(args, company_id, date_list, company_index_dict)    

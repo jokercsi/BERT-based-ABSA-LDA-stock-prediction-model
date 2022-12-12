@@ -7,19 +7,30 @@ from sklearn.model_selection import train_test_split
 
 def data_load(path_text, path_num):
 
-    with open(path_text, "rb") as f:
+    with open(path_text, "rb") as f:    # path_text : ./../../data/pkl/long/car_text.pkl
         text_data = pkl.load(f)
 
-    with open(path_num, "rb") as f:
+    #print(text_data) # 아마 텍스트 데이터의 pkl (LFTM)
+
+    with open(path_num, "rb") as f:      # path_num : ./../../data/pkl/long/stock_num.pkl
         num_data = pkl.load(f)
+
+    # print(num_data) # 아마 가격 데이터의 pkl (LFTM)
+    # print(len(text_data), len(num_data)) # 649 649 (LFTM)
 
     num_train, num_test, text_train, text_test = train_test_split(
         num_data, text_data, shuffle=False, test_size=None, train_size=454
     )
 
     num_val, num_test, text_val, text_test = train_test_split(
-        num_test, text_test, shuffle=False, test_size=None, train_size=194
+        num_test, text_test, shuffle=False, test_size=None, train_size=97
     )
+
+    print(len(num_train), len(num_val), len(num_test)) # 454 97 98
+    # print(num_train) # Looks Fine To ME
+    # print(num_val) # Looks Fine To ME
+    # print(num_test) # Looks Fine To ME
+
     x_num_train = num_train[:, 0::4]
     x_num_val = num_val[:, 0::4]
     x_num_test = num_test[:, 0::4]
@@ -28,6 +39,7 @@ def data_load(path_text, path_num):
     y_num_val = num_val[:, 3::4]
     y_num_test = num_test[:, 3::4]
 
+    
     return (
         text_train,
         x_num_train,

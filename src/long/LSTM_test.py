@@ -57,21 +57,25 @@ def test_data_load(path_num):
         num_data = pkl.load(f)
 
     num_train, num_test = train_test_split(
-        num_data, shuffle=False, test_size=None, train_size=854
+        num_data, shuffle=False, test_size=None, train_size=454
     )
     num_val, num_test = train_test_split(
-        num_test, shuffle=False, test_size=None, train_size=241
+        num_test, shuffle=False, test_size=None, train_size=97
     )
 
     open_price = num_test[:, 0::4]
     low_price = num_test[:, 1::4]
     high_price = num_test[:, 2::4]
     close_price = num_test[:, 3::4]
-
+    # print( open_price, low_price, high_price, close_price) 
+    # [[26774.61914062 10500.51953125  3224.20996094]] [[26619.88085938 10421.20996094  3205.64990234]] [[26808.4296875  10532.62011719  3233.52001953]] [[26671.94921875 10503.19042969  3224.72998047]]
+    
     return open_price, low_price, high_price, close_price
 
 
 def mcfd(predict_price, close_price):
+
+    # print(predict_price, close_price) # close_price가 0....
 
     predict_future = predict_price[1:, :]
     predict_current = predict_price[:-1, :]
@@ -148,16 +152,21 @@ def result(predict_price, seq_len, path_num, path_stock, path_graph):
     company_id = read_company_id(path_stock)
     path_graph = pathlib.Path(path_graph)
 
-    open_price, low_price, high_price, close_price = test_data_load(path_num)
+    open_price, low_price, high_price, close_price = test_data_load(path_num) # test_data_load 함수
+
+    print( open_price, low_price, high_price, close_price)
 
     open_price = open_price[(seq_len - 1) :]
     low_price = low_price[(seq_len - 1) :]
     high_price = high_price[(seq_len - 1) :]
     close_price = close_price[(seq_len - 1) :]
 
-    mcfd_result = mcfd(predict_price, close_price)
-    mftr_result = mftr(predict_price, close_price)
-    trade_result = trade(predict_price, open_price, low_price, high_price, close_price)
+    print( open_price, low_price, high_price, close_price)
+
+
+    mcfd_result = mcfd(predict_price, close_price)  # mcfd 함수 가져오기
+    mftr_result = mftr(predict_price, close_price)  # mftr 함수 가져오기
+    trade_result = trade(predict_price, open_price, low_price, high_price, close_price) # trade 함수 가져오기
 
     for i, (company, mcfd_, mftr_, trade_) in enumerate(
         zip(company_id, mcfd_result, mftr_result, trade_result)
@@ -174,6 +183,7 @@ def result(predict_price, seq_len, path_num, path_stock, path_graph):
         plt.savefig(path_graph / file_name, dpi=300)
 
 
+# MAIN 함수에서 불러 들이키는 함수 
 def test(args):
 
     scaler_x_test = MinMaxScaler()
@@ -182,9 +192,11 @@ def test(args):
     _, _, _, _, _, _, X_test_t, X_test_n, y_test = data_load(
         path_pkl + args.text, path_pkl + args.num
     )
-
+    #print(X_test_n, y_test) # [[26774.61914062 10500.51953125  3224.20996094]] [[26671.94921875 10503.19042969  3224.72998047]]
     X_test_n = scaler_x_test.fit_transform(X_test_n)
     y_test = scaler_y_test.fit_transform(y_test)
+
+    #print(X_test_n, y_test) # LFTM
 
     estimated_lstm = StockPriceEstimator(
         textual_dim=len(X_test_t[0]),
@@ -225,7 +237,8 @@ def test(args):
         predict_price.view(-1).to("cpu").detach().numpy().reshape(-1, len(X_test_n[0]))
     )
     predict_price = scaler_y_test.inverse_transform(predict_price)
-
+    
+    # 결과 함수 가져오기
     result(
         predict_price, seq_len, path_pkl + args.num, path_data + args.stock, args.graph
     )

@@ -10,9 +10,9 @@ def parser_args():
     print("current location is :", cwd)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input", default="./data/output_morphological.csv")   # input data PATH
-    parser.add_argument("-train", "--train", default="./data/train/train.txt")        # train data PATH
-    parser.add_argument("-test", "--test", default="./data/test/test.txt")            # test data PATH
+    parser.add_argument("-i", "--input", default="./../../data/output_morphological.csv")   # input data PATH
+    parser.add_argument("-train", "--train", default="./../../data/train/train.txt")        # train data PATH
+    parser.add_argument("-test", "--test", default="./../../data/test/test.txt")            # test data PATH
 
     return parser.parse_args()
 

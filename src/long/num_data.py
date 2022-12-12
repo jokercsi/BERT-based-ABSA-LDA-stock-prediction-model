@@ -13,8 +13,8 @@ def parser_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-stock", "--stock", default="TOPIX10C_CAR")
-    parser.add_argument("-o", "--output", default="car_num.pkl")
+    parser.add_argument("-stock", "--stock", default="price")
+    parser.add_argument("-o", "--output", default="stock_num.pkl")
 
     return parser.parse_args()
 
@@ -29,21 +29,24 @@ def read_csv(args):
     file_names = path_csv.glob("*.csv")
 
     for f in file_names:
-        df = pd.read_csv(f, encoding="CP932")
-        if len(df) == 1219:
-            date.extend(list(df["日付"]))
+        #print(f)
+        stock_df = pd.read_csv(f, encoding="CP932")
+        if len(stock_df) == 649:
+            date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
 
     date_list = set(date)
     file_names = path_csv.glob("*.csv")
 
     for f in file_names:
         df = pd.read_csv(f, encoding="CP932")
-        tmp = df[df["日付"].isin(date_list)][["始値", "安値", "高値", "終値"]].values.reshape(
-            -1, 4
-        )
+        print(df)
+        tmp = df[df["Date"].isin(date_list)][["Open", "Low", "High", "Close"]].values.reshape(1, 4)
         stock_data.append(tmp)
 
+    print(stock_data)
     stock_data = np.concatenate(stock_data, axis=1)
+    print(stock_data)
+
     output(stock_data, path_output)
 
 

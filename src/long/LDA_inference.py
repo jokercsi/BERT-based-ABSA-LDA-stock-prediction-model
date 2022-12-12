@@ -12,8 +12,8 @@ from LDA import LDA_inf
 
 warnings.filterwarnings("ignore")
 
-path_data = "./data/"
-path_pkl = "./data/pkl/long/"
+path_data = "./../../data/"
+path_pkl = "./../../data/pkl/long/"
 
 
 def parser_args():
@@ -24,20 +24,20 @@ def parser_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-n", "--news", default="./data/output_morphological.csv")
+    parser.add_argument("-n", "--news", default="./../../data/output_morphological.csv")
 
     parser.add_argument("-list", "--company_list", default="stock_index.txt")
 
     parser.add_argument("-stock", "--stock", default="price")
 
     parser.add_argument(
-        "-lda", "--lda", default="./lda/src", help="現在のフォルダからlda/srcまでの相対パス"
+        "-lda", "--lda", default="./../../lda/src", help="現在のフォルダからlda/srcまでの相対パス"
     )
 
     parser.add_argument(
         "-train",
         "--train",
-        default="./data/train/",
+        default="./../../data/train/",
         help="lda/srcから学習済みLDAモデルがあるフォルダまでの相対パス",
     )
     parser.add_argument(
@@ -49,13 +49,13 @@ def parser_args():
     parser.add_argument(
         "-vector",
         "--vector",
-        default="./data/vector",
+        default="./../../data/vector",
         help="現在のフォルダから日付ごとに新聞記事を作成するフォルダまでの相対パス",
     )
     parser.add_argument(
         "-current",
         "--current",
-        default="./src/long/",
+        default="./../../src/long/",
         help="lda/srcから現在のフォルダまでの相対パス",
     )
 
@@ -169,7 +169,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
                 if not os.path.exists(path / company_list[j]):
                     (path / company_list[j]).mkdir()
 
-                # vector.txt 열기;
+                # vector.txt 만들기;
                 file_out = open(
                     path / company_list[j] / "vector.txt", "w", encoding="utf_8"
                 )
@@ -194,7 +194,7 @@ def LDA(args, company_id, date_list, company_index_dict):
     twords = args.twords
     topics = args.topics
     model = "model-final"
-
+    print(args)
     topic_vector = []
 
     for date in date_list:
@@ -205,10 +205,14 @@ def LDA(args, company_id, date_list, company_index_dict):
         for j, v in enumerate(company_index_dict[date]):
             if v != []:
 
-                tests = test + str(date) + "/" + company_id[j] + "/vector.txt"
+                #현재 위치 확인
+                cwd = os.getcwd()
+                print("current location is :", cwd)
+                print(test)   
+                tests = test + str(date) + "/" + company_id[j] + "/vector.txt"   #./../vector/20171227/SnP/vector.txt
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
                 theta = []
-
+                
                 with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
                     for line in fin.readlines():
                         row = []

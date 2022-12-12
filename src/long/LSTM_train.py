@@ -18,7 +18,7 @@ path_model = "./../../data/model/long/"
 def parser_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-n", "--num", default="car_num.pkl")
+    parser.add_argument("-n", "--num", default="stock_num.pkl")
     parser.add_argument("-t", "--text", default="car_text.pkl")
 
     parser.add_argument("-e", "--epoch", default=1000, type=int)
@@ -84,6 +84,7 @@ def estimate(
     torch.save(net.state_dict(), path_long_model)
 
 
+# LSTM 모델 학습
 def train(args):
 
     scaler_x_train = MinMaxScaler()

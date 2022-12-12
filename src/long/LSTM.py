@@ -14,11 +14,11 @@ def data_load(path_text, path_num):
         num_data = pkl.load(f)
 
     num_train, num_test, text_train, text_test = train_test_split(
-        num_data, text_data, shuffle=False, test_size=None, train_size=854
+        num_data, text_data, shuffle=False, test_size=None, train_size=454
     )
 
     num_val, num_test, text_val, text_test = train_test_split(
-        num_test, text_test, shuffle=False, test_size=None, train_size=241
+        num_test, text_test, shuffle=False, test_size=None, train_size=194
     )
     x_num_train = num_train[:, 0::4]
     x_num_val = num_val[:, 0::4]

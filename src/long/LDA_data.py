@@ -33,5 +33,6 @@ if __name__ == "__main__":
     news = pd.read_csv(args.input, encoding="utf8") # input 파일 읽기
 
     train, test = train_test_split(news, shuffle=False, test_size=None, train_size=0.7) # train 과 test 나누기
+    print(len(train), len(test))
     make_data(train, args.train)    # train 파일 작성
     make_data(test, args.test)      # test 파일 작성

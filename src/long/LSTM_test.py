@@ -21,12 +21,12 @@ path_model = "./../../data/model/long/"
 def parser_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-n", "--num", default="car_num.pkl")
+    parser.add_argument("-n", "--num", default="stock_num.pkl")
     parser.add_argument("-t", "--text", default="car_text.pkl")
-    parser.add_argument("-stock", "--stock", default="TOPIX10C_CAR")
+    parser.add_argument("-stock", "--stock", default="price")
     parser.add_argument("-graph", "--graph", default="./../../data/result/long")
 
-    parser.add_argument("-s", "--seq_len", default=20, type=int)
+    parser.add_argument("-s", "--seq_len", default=20, type=int)    # 학습기간
 
     parser.add_argument("-e_model", "--estimated_model", default="estimated_car.model")
     parser.add_argument(
@@ -34,7 +34,7 @@ def parser_args():
         "--predicted_model",
         default="predicted_car.model",
     )
-    parser.add_argument("-o", "--output", default="predict_car.pkl")
+    parser.add_argument("-o", "--output", default="predict_stock.pkl")
 
     return parser.parse_args()
 

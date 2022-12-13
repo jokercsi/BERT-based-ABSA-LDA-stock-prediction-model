@@ -15,10 +15,10 @@ config.use_bert_spc = True
 config.use_amp = False
 config.cache_dataset = False
 
-chinese_sets = ATEPC.ATEPCDatasetList.Multilingual
+English_sets = ATEPC.ATEPCDatasetList.English_SemEval2016Task5
 
 aspect_extractor = ATEPC.ATEPCTrainer(config=config,
-                                      dataset=chinese_sets,
+                                      dataset=English_sets,
                                       checkpoint_save_mode=1,
                                       auto_device=True
                                       ).load_trained_model()

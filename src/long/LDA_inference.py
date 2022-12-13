@@ -80,10 +80,13 @@ def read_company_id(path_stock):
     return name
 
 
+# stock_index 내용 읽기
 def read_company_list(path_company_list):
     with open(path_company_list, "r", encoding="utf-8") as f:
         company = [(w.replace("\n", "")).split(",") for w in f]
         f.close()
+
+        # print(company)
     return company
 
 
@@ -105,7 +108,7 @@ def read_csv(path_news, path_stock):
 
     return news_df, date_list
 
-
+# list 에 있는 회사 뽑아옴
 def check_company_noun(news, company_list):
     text = news[4]
     #text = 'x a x'
@@ -132,7 +135,7 @@ def extract_news(company_list, date_list, news_df):
     #print(news_df['Date'])
 
     for date in tqdm.tqdm(date_list):   # 가격의 날짜
-        company_index_list = [[] for i in range(len(company_list))] # len(company_list) : 3
+        company_index_list = [[] for i in range(len(company_list))] # len(company_list) : 3 (Dow, SNP, Nasdaq)
         #print(type(news_df["Date"]))
         #print(type(date))
         #print(news_df[news_df["Date"] == date].values)
@@ -140,7 +143,9 @@ def extract_news(company_list, date_list, news_df):
             news_df[news_df["Date"] == date].values,
             news_df[news_df["Date"] == date].index,
         ):
+
             relation_list = check_company_noun(news, company_list)
+            # print(relation_list)
 
             if relation_list != []:
                 for j in relation_list:

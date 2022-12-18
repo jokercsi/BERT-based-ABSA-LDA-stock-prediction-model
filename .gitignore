@@ -3,3 +3,7 @@ data/*.csv
 data/
 
 lda/
+
+src/long/logs
+src/long/integrated_datasets
+src/long/checkpoints

@@ -218,6 +218,7 @@ def LDA(args, company_id, date_list, company_index_dict):
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
                 theta = []
                 
+                # 토픽을 백터화
                 with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
                     for line in fin.readlines():
                         row = []

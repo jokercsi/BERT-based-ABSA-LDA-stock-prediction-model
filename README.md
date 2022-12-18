@@ -88,8 +88,6 @@ _You need to install all._
 
 _Below is an example of how you can instruct your audience on installing and setting up your app._
 
-bert를 사용하기 위한 tensorflow 버전
-https://github.com/google-research/bert/issues/1140
 
 1. Clone the repo
    ```sh
@@ -99,6 +97,10 @@ https://github.com/google-research/bert/issues/1140
    ```sh
    pip3 install -r requirements.txt
    ```
+3. [Download dataset]
+  [Download data from this link](DATASET.md)
+
+  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

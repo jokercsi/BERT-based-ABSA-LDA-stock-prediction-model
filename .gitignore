@@ -2,8 +2,10 @@
 data/*.csv
 data/
 
-lda/
 
+googleColab(temporary)/
+
+# pyABSA
 src/long/logs
 src/long/integrated_datasets
 src/long/checkpoints

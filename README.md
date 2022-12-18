@@ -169,7 +169,7 @@ Excute <code>LSTM_train.py</code>
 
 Excute <code>LSTM_test.py</code>
 
-: test LSTM
+&nbsp;&nbsp;: test LSTM
 
    ```sh
    python LSTM_test.py

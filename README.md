@@ -97,8 +97,8 @@ _Below is an example of how you can instruct your audience on installing and set
    ```sh
    pip3 install -r requirements.txt
    ```
-3. [Download dataset]
-  [Download data from this link](DATASET.md)
+3. Download dataset
+  [Download from this link](DATASET.md)
 
   
 
@@ -109,7 +109,72 @@ _Below is an example of how you can instruct your audience on installing and set
 ## Usage
 
 show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space.
+</br></br>
 
-_For more examples_
+### 1. Morphological analysis
+
+Move to <code>/src</code>
+
+   ```sh
+   cd src
+   ```
+
+Excute <code>Morphological_Analysis.py</code>
+
+   ```sh
+   python Morphological_Analysis.py
+   ```
+output file: <code>output_morphological.py</code>
+
+</br></br>
+
+### 2. LDA model
+Move to <code>/long</code>
+   ```sh
+   cd long
+   ```
+
+Excute <code>LDA_data.py</code>
+
+: Make folder for training data
+
+   ```sh
+   python LDA_data.py
+   ```
+
+Excute <code>LDA_train.py</code>
+
+: train LDA
+   ```sh
+   python LDA_train.py
+   ```
+
+
+Excute <code>LDA_inference.py</code>
+
+: make topic vector by using LDA
+   ```sh
+   python LDA_inference.py
+   ```
+
+</br></br>
+
+### 3. LSTM model
+
+Excute <code>LSTM_train.py</code>
+
+   ```sh
+   python LSTM_train.py
+   ```
+
+Excute <code>LSTM_test.py</code>
+
+: test LSTM
+
+   ```sh
+   python LSTM_test.py
+   ```
+
+result file: <code>data\result\long</code>
 
 <p align="right">(<a href="#top">back to top</a>)</p>

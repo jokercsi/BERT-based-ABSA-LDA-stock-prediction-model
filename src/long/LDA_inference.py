@@ -7,7 +7,6 @@ import warnings
 import numpy as np
 import pandas as pd
 import tqdm
-import os
 from LDA import LDA_inf
 
 warnings.filterwarnings("ignore")
@@ -18,7 +17,7 @@ path_pkl = "./../../data/pkl/long/"
 
 def parser_args():
 
-    #현재 위치 확인
+    # 현재 위치 확인
     cwd = os.getcwd()
     print("current location is :", cwd)
 
@@ -91,31 +90,31 @@ def read_company_list(path_company_list):
 
 
 # 가격 데이터 읽는 함수
-def read_csv(path_news, path_stock): 
+def read_csv(path_news, path_stock):
 
-
-    news_df = pd.read_csv(path_news, encoding="utf8")    # news_df : output_morpological을 읽음
+    news_df = pd.read_csv(path_news, encoding="utf-8")    # news_df : output_morpological을 읽음
     file_names = path_stock.glob("*.csv")
 
     date = []
     for f in file_names:    # f는 파일 경로
-        stock_df = pd.read_csv(f, encoding="CP932") # df 가격 파일 데이터 가져오기
+        stock_df = pd.read_csv(f, encoding="utf-8")  # df 가격 파일 데이터 가져오기
         if len(stock_df) == 649:
             date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
 
-    date_list = sorted(list(set(date))) # 가격 데이터의 날짜 모두 가져오기
-    # print(date_list) 
+    date_list = sorted(list(set(date)))  # 가격 데이터의 날짜 모두 가져오기
+    #  print(date_list)
 
     return news_df, date_list
+
 
 # list 에 있는 회사 뽑아옴
 def check_company_noun(news, company_list):
     text = news[4]
-    #text = 'x a x'
+    # text = 'x a x'
     noun = text.split(" ")
     noun = list(filter(("").__ne__, noun))  # 뉴스 기사를 단어 단위로 나눔
     check_list = []
-    #print(noun)
+    # print(noun)
 
     for i, company_name in enumerate(company_list):
         for name in company_name:
@@ -132,13 +131,14 @@ def extract_news(company_list, date_list, news_df):
     news_df['Date'] = pd.to_datetime(news_df['Date'])
     news_df['Date'] = news_df["Date"].dt.strftime('%Y%m%d')
     news_df['Date'] = news_df['Date'].astype(int)
-    #print(news_df['Date'])
+    # print(news_df['Date'])
 
     for date in tqdm.tqdm(date_list):   # 가격의 날짜
-        company_index_list = [[] for i in range(len(company_list))] # len(company_list) : 3 (Dow, SNP, Nasdaq)
-        #print(type(news_df["Date"]))
-        #print(type(date))
-        #print(news_df[news_df["Date"] == date].values)
+        # len(company_list) : 3 (Dow, SNP, Nasdaq)
+        company_index_list = [[] for i in range(len(company_list))]
+        # print(type(news_df["Date"]))
+        # print(type(date))
+        # print(news_df[news_df["Date"] == date].values)
         for news, index in zip(
             news_df[news_df["Date"] == date].values,
             news_df[news_df["Date"] == date].index,
@@ -158,7 +158,6 @@ def extract_news(company_list, date_list, news_df):
 def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
     for i, date in enumerate(date_list):
-
 
         path = data_path / str(date)
 
@@ -190,7 +189,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
 def LDA(args, company_id, date_list, company_index_dict):
 
-    path_lda = pathlib.Path(args.lda)   #./lda/src
+    path_lda = pathlib.Path(args.lda)   # ./lda/src
     train = args.train
     test = args.test
     path_return = os.getcwd()
@@ -210,14 +209,14 @@ def LDA(args, company_id, date_list, company_index_dict):
         for j, v in enumerate(company_index_dict[date]):
             if v != []:
 
-                #현재 위치 확인
+                # 현재 위치 확인
                 cwd = os.getcwd()
                 print("current location is :", cwd)
-                print(test)   
-                tests = test + str(date) + "/" + company_id[j] + "/vector.txt"   #./../vector/20171227/SnP/vector.txt
+                print(test)
+                # ./../vector/20171227/SnP/vector.txt
+                tests = test + str(date) + "/" + company_id[j] + "/vector.txt"
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
                 theta = []
-                
                 # 토픽을 백터화
                 with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
                     for line in fin.readlines():
@@ -253,14 +252,18 @@ if __name__ == "__main__":
     path_news = pathlib.Path(args.news)                     # data\output_morphological.csv
     path_stock = pathlib.Path(path_data + args.stock)       # data\price
     path_vector = pathlib.Path(args.vector)                 # data\vector
-    path_list = pathlib.Path(path_data + args.company_list) # data\stock_index.txt
+    path_list = pathlib.Path(path_data + args.company_list)  # data\stock_index.txt
 
     company_id = read_company_id(path_stock)                # ['Dow', 'Nasdaq', 'SnP']
-    company_list = read_company_list(path_list)             # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'], ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
-
-    news, date_list = read_csv(path_news, path_stock)       # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
-    company_index_dict = extract_news(company_list, date_list, news)    # stock_index 리스트에 있는 단어가 포함된 뉴스만 뽑아오기
-    #print(company_index_dict)
-    make_folder(path_vector, date_list, company_index_dict, company_id, news)   # 폴더 만들기 (data\vector, 가격 데이터의 날짜, stock_index의 단어가 포함된 뉴스, ['Dow', 'Nasdaq', 'SnP'], 데이터 마이닝 후의 텍스트 데이터)
- 
-    LDA(args, company_id, date_list, company_index_dict)    
+    # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'],
+    #  ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
+    company_list = read_company_list(path_list)
+    # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
+    news, date_list = read_csv(path_news, path_stock)
+    # stock_index 리스트에 있는 단어가 포함된 뉴스만 뽑아오기
+    company_index_dict = extract_news(company_list, date_list, news)
+    # print(company_index_dict)
+    # 폴더 만들기 (data\vector, 가격 데이터의 날짜,
+    # stock_index의 단어가 포함된 뉴스, ['Dow', 'Nasdaq', 'SnP'], 데이터 마이닝 후의 텍스트 데이터)
+    make_folder(path_vector, date_list, company_index_dict, company_id, news)
+    LDA(args, company_id, date_list, company_index_dict)

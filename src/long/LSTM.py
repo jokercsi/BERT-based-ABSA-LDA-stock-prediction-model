@@ -10,7 +10,8 @@ def data_load(path_text, path_num):
     with open(path_text, "rb") as f:    # path_text : ./../../data/pkl/long/car_text.pkl
         text_data = pkl.load(f)
 
-    #print(text_data) # 아마 텍스트 데이터의 pkl (LFTM)
+    # print(text_data)
+    # 아마 텍스트 데이터의 pkl (LFTM)
 
     with open(path_num, "rb") as f:      # path_num : ./../../data/pkl/long/stock_num.pkl
         num_data = pkl.load(f)
@@ -26,7 +27,7 @@ def data_load(path_text, path_num):
         num_test, text_test, shuffle=False, test_size=None, train_size=97
     )
 
-    print(len(num_train), len(num_val), len(num_test)) # 454 97 98
+    print(len(num_train), len(num_val), len(num_test))  # 454 97 98
     # print(num_train) # Looks Fine To ME
     # print(num_val) # Looks Fine To ME
     # print(num_test) # Looks Fine To ME
@@ -39,7 +40,6 @@ def data_load(path_text, path_num):
     y_num_val = num_val[:, 3::4]
     y_num_test = num_test[:, 3::4]
 
-    
     return (
         text_train,
         x_num_train,

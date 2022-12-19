@@ -6,7 +6,7 @@ from LDA import LDA_est
 
 def parser_args():
 
-    #현재 위치 확인
+    # 현재 위치 확인
     cwd = os.getcwd()
     print("current location is :", cwd)
 

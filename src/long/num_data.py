@@ -29,21 +29,22 @@ def read_csv(args):
     file_names = path_csv.glob("*.csv")
 
     for f in file_names:
-        #print(f)
-        stock_df = pd.read_csv(f, encoding="CP932")
+        # print(f)
+        stock_df = pd.read_csv(f, encoding="utf-8")  # or CP932
         print(stock_df)
         if len(stock_df) == 649:
             date.extend(list(stock_df["Date"]))
-            #date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
+            # date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
 
-    #print(date)
+    # print(date)
     date_list = set(date)
     file_names = path_csv.glob("*.csv")
 
     for f in file_names:
-        df = pd.read_csv(f, encoding="CP932")
+        df = pd.read_csv(f, encoding="utf-8")  # or CP932
         print(df["Date"].isin(date_list))
-        tmp = df[df["Date"].isin(date_list)][["Open", "Low", "High", "Close"]].values.reshape(-1, 4)
+        price_col = ["Open", "Low", "High", "Close"]
+        tmp = df[df["Date"].isin(date_list)][price_col].values.reshape(-1, 4)
         stock_data.append(tmp)
 
     print(stock_data)

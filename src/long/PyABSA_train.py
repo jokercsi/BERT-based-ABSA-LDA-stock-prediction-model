@@ -26,13 +26,11 @@ aspect_extractor = ATEPC.ATEPCTrainer(config=config,
 atepc_examples = ['But the staff was so nice to us .',
                   'But the staff was so horrible to us .',
                   r'Not only was the food outstanding , but the little ` perks \' were great .',
-                  'It took half an hour to get our check , which was perfect since we could sit , have drinks and talk !',
-                  'It was pleasantly uncrowded , the service was delightful , the garden adorable , '
-                  'the food -LRB- from appetizers to entrees -RRB- was delectable .',
-                  'How pretentious and inappropriate for MJ Grill to claim that it provides power lunch and dinners !'
                   ]
-aspect_extractor.batch_predict(inference_source=atepc_examples,  #
+aspect_extractor.batch_predict(inference_source=atepc_examples,
                                save_result=True,
-                               print_result=True,  # print the result
-                               pred_sentiment=True,  # Predict the sentiment of extracted aspect terms
+                               # print the result
+                               print_result=True,
+                               # Predict the sentiment of extracted aspect terms
+                               pred_sentiment=True,
                                )

@@ -1,8 +1,11 @@
-from pyabsa import ATEPCCheckpointManager
 import argparse
 import os
+from itertools import chain
+
 import pandas as pd
 from nltk import sent_tokenize
+from pyabsa import ATEPCCheckpointManager
+from tqdm import tqdm
 
 
 def parser_args():
@@ -20,24 +23,35 @@ def parser_args():
 
 def preprocessing_for_pyABSA(news):
 
-    headlines = news[0]
+    headlines = news['Headlines']
+    articles = []
 
-    tokenized_text = sent_tokenize(headlines)
-    print(tokenized_text)
+    for article in tqdm(headlines.values):
+        line_list = Morphological(article)
+        articles.append(line_list)
+        # print(articles)
 
-    return tokenized_text
+    return articles
 
 
-def pyABSA(news):
+def Morphological(articles):
+
+    headlines = articles
+
+    tokenized_as_line = sent_tokenize(headlines)
+    # print(tokenized_as_line)
+
+    return tokenized_as_line
+
+
+def pyABSA(articles_list):
     aspect_extractor = ATEPCCheckpointManager.get_aspect_extractor(
         checkpoint='english',
         auto_device=True  # False means load model on CPU
     )
-    df = news['after_headlines'].head()
-    df_list = df.values.tolist()  # pandas to list
 
     # You can inference from a list of setences or a DatasetItem from PyABSA
-    examples = df_list
+    examples = articles_list
     inference_source = examples
     atepc_result = aspect_extractor.extract_aspect(
         inference_source=inference_source,
@@ -51,5 +65,8 @@ def pyABSA(news):
 if __name__ == "__main__":
     args = parser_args()
     news = pd.read_csv(args.input, encoding="utf-8")  # input 파일 읽기
-    preprocessing_for_pyABSA(news)
-    #pyABSA(news)
+    articles_list = preprocessing_for_pyABSA(news)
+    articles_list = list(chain(*articles_list))
+
+    # print(articles_list[:5])
+    pyABSA(articles_list[:5])

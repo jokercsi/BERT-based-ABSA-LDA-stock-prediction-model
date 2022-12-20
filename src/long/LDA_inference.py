@@ -18,14 +18,14 @@ path_pkl = "./../../data/pkl/long/"
 def parser_args():
 
     # 현재 위치 확인
-    cwd = os.getcwd()
-    print("current location is :", cwd)
+    # cwd = os.getcwd()
+    # print("current location is :", cwd)
 
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-n", "--news", default="./../../data/output_morphological.csv")
 
-    parser.add_argument("-list", "--company_list", default="stock_index.txt")
+    parser.add_argument("-list", "--company_list", default="stock_index")
 
     parser.add_argument("-stock", "--stock", default="price")
 
@@ -59,8 +59,8 @@ def parser_args():
     )
 
     parser.add_argument("-niters", "--niters", default=30)
-    parser.add_argument("-twords", "--twords", default=100)
-    parser.add_argument("-topics", "--topics", default=100)
+    parser.add_argument("-twords", "--twords", default=10)
+    parser.add_argument("-topics", "--topics", default=10)
 
     parser.add_argument("-o", "--output", default="car_text.pkl")
 
@@ -79,17 +79,23 @@ def read_company_id(path_stock):
     return name
 
 
-# stock_index 내용 읽기
+# stock_index 폴더의 내용 읽기
 def read_company_list(path_company_list):
-    with open(path_company_list, "r", encoding="utf-8") as f:
-        company = [(w.replace("\n", "")).split(",") for w in f]
-        f.close()
 
-        # print(company)
-    return company
+    file_names = path_company_list.glob("*.txt")
+
+    stock_index = []
+    for file_path in file_names:    # file_path는 파일 경로
+        with open(file_path, "r", encoding="utf-8") as f:
+            company_name = [w.strip() for w in f]
+            company_name = list(company_name)
+            stock_index.append(company_name)
+            f.close()
+
+    return stock_index
 
 
-# 가격 데이터 읽는 함수
+# 뉴스 데이터 읽는 함수
 def read_csv(path_news, path_stock):
 
     news_df = pd.read_csv(path_news, encoding="utf-8")    # news_df : output_morpological을 읽음
@@ -102,7 +108,7 @@ def read_csv(path_news, path_stock):
             date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
 
     date_list = sorted(list(set(date)))  # 가격 데이터의 날짜 모두 가져오기
-    #  print(date_list)
+    # print(date_list)
 
     return news_df, date_list
 
@@ -209,11 +215,7 @@ def LDA(args, company_id, date_list, company_index_dict):
         for j, v in enumerate(company_index_dict[date]):
             if v != []:
 
-                # 현재 위치 확인
-                cwd = os.getcwd()
-                print("current location is :", cwd)
-                print(test)
-                # ./../vector/20171227/SnP/vector.txt
+                # tests =  ./../vector/20171227/SnP/vector.txt
                 tests = test + str(date) + "/" + company_id[j] + "/vector.txt"
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
                 theta = []
@@ -254,15 +256,21 @@ if __name__ == "__main__":
     path_vector = pathlib.Path(args.vector)                 # data\vector
     path_list = pathlib.Path(path_data + args.company_list)  # data\stock_index.txt
 
-    company_id = read_company_id(path_stock)                # ['Dow', 'Nasdaq', 'SnP']
+    # 가격 데이터 이름
+    # company_id = ['Dow', 'Nasdaq', 'SnP']
+    company_id = read_company_id(path_stock)
+
     # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'],
     #  ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
     company_list = read_company_list(path_list)
-    # news : 데이터 마이닝 후의 텍스트 데이터  , date_list : 가격 데이터의 날짜
+
+    # news = 데이터 마이닝 후의 텍스트 데이터
+    # date_list = 가격 데이터의 날짜
     news, date_list = read_csv(path_news, path_stock)
+
     # stock_index 리스트에 있는 단어가 포함된 뉴스만 뽑아오기
     company_index_dict = extract_news(company_list, date_list, news)
-    # print(company_index_dict)
+
     # 폴더 만들기 (data\vector, 가격 데이터의 날짜,
     # stock_index의 단어가 포함된 뉴스, ['Dow', 'Nasdaq', 'SnP'], 데이터 마이닝 후의 텍스트 데이터)
     make_folder(path_vector, date_list, company_index_dict, company_id, news)

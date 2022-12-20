@@ -25,12 +25,12 @@ def parser_args():
     parser.add_argument("-b", "--batch_size", default=30, type=int)
     parser.add_argument("-s", "--seq_len", default=20, type=int)
 
-    parser.add_argument("-e_model", "--estimated_model", default="estimated_car.model")
+    parser.add_argument("-e_model", "--estimated_model", default="estimated.model")
 
     parser.add_argument(
         "-p_model",
         "--predicted_model",
-        default="predicted_car.model",
+        default="predicted.model",
     )
 
     return parser.parse_args()
@@ -120,6 +120,8 @@ def train(args):
     epochs = args.epoch
     batch_size = args.batch_size
 
+    # lstm 학습 결과가 저장 되는 곳
+    # path_model + args.estimated_model = ./../../data/model/long/estimated_car.model
     estimate(
         X_train_n,
         X_train_t,
@@ -198,4 +200,6 @@ def train(args):
 
 if __name__ == "__main__":
     args = parser_args()
+    # print(path_model + args.estimated_model)
+    # print(torch.load(path_model + args.estimated_model))
     train(args)

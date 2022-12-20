@@ -28,11 +28,11 @@ def parser_args():
 
     parser.add_argument("-s", "--seq_len", default=20, type=int)    # 학습기간
 
-    parser.add_argument("-e_model", "--estimated_model", default="estimated_car.model")
+    parser.add_argument("-e_model", "--estimated_model", default="estimated.model")
     parser.add_argument(
         "-p_model",
         "--predicted_model",
-        default="predicted_car.model",
+        default="predicted.model",
     )
     parser.add_argument("-o", "--output", default="predict_stock.pkl")
 
@@ -180,9 +180,11 @@ def result(predict_price, seq_len, path_num, path_stock, path_graph):
 
         plt.figure(figsize=(15, 8), dpi=300)
         plt.plot(predict_price[:, i], label="predict_price")
-        plt.plot(open_price[:, i], label="open_price")
+        # plt.plot(open_price[:, i], label="open_price")
         plt.plot(close_price[:, i], label="close_price")
-        plt.legend(["predict_price", "open_price", "close_price"], fontsize=20)
+        # plt.legend(["predict_price", "open_price", "close_price"], fontsize=20)
+        plt.legend(["predict_price", "close_price"], fontsize=20)
+
         file_name = company + ".png"
         plt.savefig(path_graph / file_name, dpi=300)
 

@@ -9,10 +9,7 @@ download data folder and replace it to `absa-lda-stock-prediction\data`
 
 ## Steps of Data-Processing
 ### 1. Price Data
-get .csv file using by yfinance 
- - Dow 30
- - Nasdaq
- - S&P 500
+get price data(Dow 30, Nasdaq, S&P 500) using by yfinance and save it as .csv file 
 
 [Process of extracting price data](data-processing/priceTimeSeries.ipynb)
 

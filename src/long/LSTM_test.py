@@ -22,7 +22,7 @@ def parser_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-n", "--num", default="stock_num.pkl")
-    parser.add_argument("-t", "--text", default="car_text.pkl")
+    parser.add_argument("-t", "--text", default="stock_index_text")
     parser.add_argument("-stock", "--stock", default="price")
     parser.add_argument("-graph", "--graph", default="./../../data/result/long")
 

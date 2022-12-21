@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 def data_load(path_text, path_num):
 
-    with open(path_text, "rb") as f:    # path_text : ./../../data/pkl/long/car_text.pkl
+    with open(path_text, "rb") as f:    # path_text : ./../../data/pkl/long/stock_index_text
         text_data = pkl.load(f)
 
     # print(text_data)

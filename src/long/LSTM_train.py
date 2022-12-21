@@ -19,7 +19,7 @@ def parser_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-n", "--num", default="stock_num.pkl")
-    parser.add_argument("-t", "--text", default="car_text.pkl")
+    parser.add_argument("-t", "--text", default="stock_index_text")
 
     parser.add_argument("-e", "--epoch", default=1000, type=int)
     parser.add_argument("-b", "--batch_size", default=30, type=int)

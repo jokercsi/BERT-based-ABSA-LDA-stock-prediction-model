@@ -3,11 +3,17 @@ import os
 import pathlib
 import pickle as pkl
 import warnings
+from itertools import chain
+
 
 import numpy as np
 import pandas as pd
 import tqdm
 from LDA import LDA_inf
+from PyABSA_inference import preprocessing_for_pyABSA
+from PyABSA_inference import pyABSA
+
+
 
 warnings.filterwarnings("ignore")
 
@@ -58,11 +64,11 @@ def parser_args():
         help="lda/srcから現在のフォルダまでの相対パス",
     )
 
-    parser.add_argument("-niters", "--niters", default=30)
-    parser.add_argument("-twords", "--twords", default=10)
-    parser.add_argument("-topics", "--topics", default=10)
+    parser.add_argument("-niters", "--niters", default=10)   # The number of Gibbs sampling iterations
+    parser.add_argument("-twords", "--twords", default=15)  # The number of most likely words for each topic
+    parser.add_argument("-topics", "--topics", default=15)  # The number of topics
 
-    parser.add_argument("-o", "--output", default="car_text.pkl")
+    parser.add_argument("-o", "--output", default="stock_index_text")
 
     return parser.parse_args()
 
@@ -183,7 +189,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
                 file_out = open(
                     path / company_list[j] / "vector.txt", "w", encoding="utf_8"
                 )
-                file_out.write("1")
+                file_out.write("1")  # 왜 1 일까??
                 file_out.write("\n")
                 sentense = ""
                 for i in range(0, len(text)):
@@ -194,7 +200,8 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
 
 def LDA(args, company_id, date_list, company_index_dict):
-
+    # company_id : ['Dow', 'Nasdaq', 'SnP']
+    
     path_lda = pathlib.Path(args.lda)   # ./lda/src
     train = args.train
     test = args.test
@@ -203,47 +210,61 @@ def LDA(args, company_id, date_list, company_index_dict):
     niters = args.niters
     twords = args.twords
     topics = args.topics
-    model = "model-final"
-    print(args)
+    model = "model-final"  # The name of the previously estimated model.
+
     topic_vector = []
-
-    for date in date_list:
-
+    print(len(company_id))
+    #for date in date_list:
+    for date in date_list[:5]:
+        print("date =", date)
+        # 3 (주가지수 수) X 10 (토픽 수)
+        # 3 X 10 배열은 모두 0
         topic_vector_data = np.zeros((len(company_id), int(topics)))
+        
+        print("topic_vector_data 3X10", topic_vector_data)
         path = path_vector / str(date)
 
         for j, v in enumerate(company_index_dict[date]):
-            if v != []:
-
+            if v != []:  # 기사에 해당되는 내용이 있을 경우
                 # tests =  ./../vector/20171227/SnP/vector.txt
                 tests = test + str(date) + "/" + company_id[j] + "/vector.txt"
+                # LDA Model Execute
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
-                theta = []
-                # 토픽을 백터화
-                with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
-                    for line in fin.readlines():
-                        row = []
-                        toks = line.split(" ")
-                        for tok in toks:
-                            try:
-                                tok = float(tok)
-                            except ValueError:
-                                continue
 
-                            row.append(tok)
-                        theta.append(row)
-                theta = np.array(theta)
-                topic_vector_data[j] = theta
+    #             theta = []
+    #             # 토픽을 백터화 topic vector
+    #             with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
+    #                 for line in fin.readlines():
+    #                     row = []
+    #                     toks = line.split(" ")
+    #                     for tok in toks:
+    #                         print(tok)
+    #                         try:
+    #                             tok = float(tok)
+    #                         except ValueError:
+    #                             continue
 
-        tmp = np.concatenate(topic_vector_data).reshape(
-            1, int(topics) * len(company_id)
-        )
-        topic_vector.append(tmp)
-    topic_vector = np.concatenate(topic_vector)
-    output(topic_vector, path_pkl + args.output)
+    #                         row.append(tok)
+    #                     theta.append(row)
+    #             print("theta", theta)
+    #             theta = np.array(theta)
+    #             print("theta", theta)
+    #             topic_vector_data[j] = theta
+    #     print("topic_vector_data", topic_vector_data)
+    #     tmp = np.concatenate(topic_vector_data).reshape(
+    #         1, int(topics) * len(company_id)
+    #     )
+    #     print("tmp", tmp)
+    #     topic_vector.append(tmp)
+    
+    # print("topic_vector", topic_vector)
+    # topic_vector = np.concatenate(topic_vector)
+    # print("topic_vector", topic_vector)
+    # output(topic_vector, path_pkl + args.output)
 
 
 def output(data, path_output):
+    #print(data, path_output)
     with open(path_output, "wb") as f:
         pkl.dump(data, f)
 
@@ -260,8 +281,7 @@ if __name__ == "__main__":
     # company_id = ['Dow', 'Nasdaq', 'SnP']
     company_id = read_company_id(path_stock)
 
-    # [['S&P500', ' S&P', ' s&p500', ' GSPC', ' SPX'],
-    #  ['NASDAQ', ' Nasdaq', ' IXIC'], ['Dow', ' DJI']]
+    # 'S&P500' 'NASDAQ', 'Dow 30'
     company_list = read_company_list(path_list)
 
     # news = 데이터 마이닝 후의 텍스트 데이터
@@ -274,4 +294,12 @@ if __name__ == "__main__":
     # 폴더 만들기 (data\vector, 가격 데이터의 날짜,
     # stock_index의 단어가 포함된 뉴스, ['Dow', 'Nasdaq', 'SnP'], 데이터 마이닝 후의 텍스트 데이터)
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
+
+    # LDA 실행
     LDA(args, company_id, date_list, company_index_dict)
+    
+    # ▼▼▼▼ABSA▼▼▼▼
+    articles_list = preprocessing_for_pyABSA(news)
+    articles_list = list(chain(*articles_list))
+    
+    pyABSA(articles_list[:5])

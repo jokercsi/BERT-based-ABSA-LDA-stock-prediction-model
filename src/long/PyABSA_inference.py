@@ -8,17 +8,17 @@ from pyabsa import ATEPCCheckpointManager
 from tqdm import tqdm
 
 
-def parser_args():
+# def parser_args():
 
-    # 현재 위치 확인
-    cwd = os.getcwd()
-    print("current location is :", cwd)
+#     # 현재 위치 확인
+#     cwd = os.getcwd()
+#     print("current location is :", cwd)
 
-    parser = argparse.ArgumentParser()
-    # input data PATH
-    parser.add_argument("-i", "--input", default="./../../data/output_morphological.csv")
+#     parser = argparse.ArgumentParser()
+#     # input data PATH
+#     parser.add_argument("-i", "--input", default="./../../data/output_morphological.csv")
 
-    return parser.parse_args()
+#     return parser.parse_args()
 
 
 def preprocessing_for_pyABSA(news):
@@ -61,12 +61,13 @@ def pyABSA(articles_list):
     return print(atepc_result)
 
 
-# 함수들 호츌
-if __name__ == "__main__":
-    args = parser_args()
-    news = pd.read_csv(args.input, encoding="utf-8")  # input 파일 읽기
-    articles_list = preprocessing_for_pyABSA(news)
-    articles_list = list(chain(*articles_list))
+# # 함수들 호츌
+# if __name__ == "__main__":
+#     args = parser_args()
+    
+#     news = pd.read_csv(args.input, encoding="utf-8")  # input 파일 읽기
+#     articles_list = preprocessing_for_pyABSA(news)
+#     articles_list = list(chain(*articles_list))
 
-    # print(articles_list[:5])
-    pyABSA(articles_list[:5])
+#     # print(articles_list[:5])
+#     pyABSA(articles_list[:5])

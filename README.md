@@ -65,6 +65,9 @@ stock price prediction
 > 2.  NASDAQ Composite (^IXIC)
 > 3.  Dow Jones Industrial Average (^DJI)
 
+I prepared preprocessed-data in shared directory.
+You can download below link.
+
 [How to Download the Dataset?](DATASET.md)
 
 <p align="right">(<a href="#top">back to top</a>)</p>

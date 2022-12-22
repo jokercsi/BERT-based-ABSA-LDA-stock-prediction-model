@@ -49,8 +49,7 @@ def stopword(data_path):
 def make_df(data_path):
 
     news_csv = data_path.glob("*.csv")      # csv 파일들의 이름만 news_csv에 리스트에 저장된다.
-    # pd.set_option("display.max_colwidth", 5400)
-    # pd.set_option("display.max_rows", 5000)
+
     news = pd.DataFrame()
     for f in news_csv:  # csv 파일 하나씩 읽기
         tmp = pd.read_csv(f, encoding="utf-8")   # 각각 파일의 읽은 내용

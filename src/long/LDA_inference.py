@@ -3,23 +3,21 @@ import os
 import pathlib
 import pickle as pkl
 import warnings
-from itertools import chain
 
 
 import numpy as np
 import pandas as pd
 import tqdm
 from LDA import LDA_inf
-from PyABSA_inference import preprocessing_for_pyABSA
-from PyABSA_inference import pyABSA
-
+# from PyABSA_inference import preprocessing_pyABSA
+# from PyABSA_inference import ABSA
+# from itertools import chain
 
 
 warnings.filterwarnings("ignore")
 
 path_data = "./../../data/"
 path_pkl = "./../../data/pkl/long/"
-
 
 def parser_args():
 
@@ -173,6 +171,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
         path = data_path / str(date)
 
+        # 날짜 폴더 만드는 코드 
         if not os.path.exists(path):
             path.mkdir()
 
@@ -182,6 +181,7 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
                 for idx in v:
                     text.append(news["after_headlines"][idx])
 
+                # 회사 폴더 만드는 코드
                 if not os.path.exists(path / company_list[j]):
                     (path / company_list[j]).mkdir()
 
@@ -200,23 +200,24 @@ def make_folder(data_path, date_list, company_index_dict, company_list, news):
 
 
 def LDA(args, company_id, date_list, company_index_dict):
-    # company_id : ['Dow', 'Nasdaq', 'SnP']
+    # company_id : ['Dow', 'Nasdaq', 'SnP'] 3개
     
-    path_lda = pathlib.Path(args.lda)   # ./lda/src
+    path_lda = pathlib.Path(args.lda)  # lda의 위치 : ./lda/src
     train = args.train
     test = args.test
     path_return = os.getcwd()
 
+    # LDA model args
     niters = args.niters
     twords = args.twords
     topics = args.topics
     model = "model-final"  # The name of the previously estimated model.
 
     topic_vector = []
-    print(len(company_id))
     #for date in date_list:
     for date in date_list[:5]:
         print("date =", date)
+
         # 3 (주가지수 수) X 10 (토픽 수)
         # 3 X 10 배열은 모두 0
         topic_vector_data = np.zeros((len(company_id), int(topics)))
@@ -269,6 +270,57 @@ def output(data, path_output):
         pkl.dump(data, f)
 
 
+def sentiment_analysis(path_sentiment):
+    df = pd.read_csv(path_sentiment)
+    df = df.sort_values('Date')
+    neutral = df[df['Sentiment'].str.contains('Neutra')].index
+    df.drop(neutral, inplace=True)
+    df.to_csv("./../../data/sentiment/out_put_sentiment.csv", index=False, encoding="utf-8")
+    print(df)
+    return df
+
+def replace_topic(data_path, date_list, company_index_dict, company_list, sentiment_df):
+    
+    
+    # for i, date in enumerate(date_list):
+    #     path = data_path / str(date)
+    #     print(path)
+
+    return sentiment_df
+
+
+# def make_absa(data_path, date_list, company_index_dict, company_list, news):
+
+#     for i, date in enumerate(date_list):
+
+#         path = data_path / str(date)
+#         print(path)
+
+#         # j = 회사 순서, v = 기사 index
+#         for j, v in enumerate(company_index_dict[date]):
+#             if v != []:
+#                 news_text = []
+#                 for idx in v:
+#                     news_text.append(news["Headlines"][idx])
+#                 # print(news_text)
+                    
+#                 articles_list = preprocessing_pyABSA(news_text)
+#                 #print(list)
+
+#                 file_out = open(
+#                     path / company_list[j] / "sentiment.txt", "w", encoding="utf_8"
+#                 )
+#                 for i in range(0, len(articles_list)):
+#                     file_out.write(str(articles_list[i]))
+#                     file_out.write("\n")
+#                 file_out.close()
+
+#                 articles_list = list(chain(*articles_list))
+#                 path_sentiment = path / str(company_list[j]) / "sentiment.csv"
+#                 print(path_sentiment)
+#                 result = ABSA(articles_list, path_sentiment)
+#                 #print(result)
+
 if __name__ == "__main__":
 
     args = parser_args()
@@ -276,6 +328,7 @@ if __name__ == "__main__":
     path_stock = pathlib.Path(path_data + args.stock)       # data\price
     path_vector = pathlib.Path(args.vector)                 # data\vector
     path_list = pathlib.Path(path_data + args.company_list)  # data\stock_index.txt
+    path_sentiment = "./../../data/sentiment/sentiment.csv"
 
     # 가격 데이터 이름
     # company_id = ['Dow', 'Nasdaq', 'SnP']
@@ -296,10 +349,15 @@ if __name__ == "__main__":
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
 
     # LDA 실행
-    LDA(args, company_id, date_list, company_index_dict)
+    # LDA(args, company_id, date_list, company_index_dict)
     
-    # ▼▼▼▼ABSA▼▼▼▼
-    articles_list = preprocessing_for_pyABSA(news)
-    articles_list = list(chain(*articles_list))
-    
-    pyABSA(articles_list[:5])
+    # ▼▼▼▼ABSA와 합치는 작업▼▼▼▼
+    #make_absa(path_vector, date_list[:20], company_index_dict, company_id, news)
+    sentiment_df = sentiment_analysis(path_sentiment)
+
+    # vector 값 바꾸는 함수
+    replace_topic(path_vector, date_list, company_index_dict, company_list, sentiment_df)
+
+    # LDA 모델 만드는 함수
+
+    # ABSA(articles_list)

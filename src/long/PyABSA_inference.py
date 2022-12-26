@@ -66,7 +66,7 @@ def Morphological(headline):
     for line in tokenized_as_line:
         rm_stopwords.append(' '.join(w for w in word_tokenize(line) if w.lower() not in stopwords))
     
-    print(rm_stopwords)
+    #print(rm_stopwords)
     return rm_stopwords
 
 
@@ -105,14 +105,14 @@ def ABSA(articles_list, date_list):
                 aspect.append(i['aspect'][0])
                 sentiment.append(i['sentiment'][0])
                 date.append(date_list[idx])
-    print(len(date), len(sentiment), len(aspect))
+    #print(len(date), len(sentiment), len(aspect))
     data = {'Aspect':  aspect,
             'Sentiment': sentiment,
             'Date': date,
             }
     df = pd.DataFrame(data)
     df.to_csv(path_sentiment, index=False, encoding="utf-8")
-    print(df)
+    #print(df)
 
 
 # 함수들 호츌
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     args = parser_args()
     
     news = pd.read_csv(args.input, encoding="utf-8")  # input 파일 읽기
-    articles_list, date_list = preprocessing_for_pyABSA(news[:10])
+    articles_list, date_list = preprocessing_for_pyABSA(news)
 
     #기사 문장이 여러개로 나눠지면 날짜도 플러스 하는 메소드 만들기
 

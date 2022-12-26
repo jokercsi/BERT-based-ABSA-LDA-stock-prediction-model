@@ -29,10 +29,10 @@ def parser_args():
     )
     parser.add_argument("-alpha", "--alpha", default=0.1)
     parser.add_argument("-beta", "--beta", default=0.1)
-    parser.add_argument("-ntopics", "--topics", default=15)
+    parser.add_argument("-ntopics", "--topics", default=10)
     parser.add_argument("-niters", "--niters", default=1000)
     parser.add_argument("-savesteps", "--savesteps", default=500)
-    parser.add_argument("-twords", "--twords", default=15)
+    parser.add_argument("-twords", "--twords", default=10)
 
     return parser.parse_args()
 

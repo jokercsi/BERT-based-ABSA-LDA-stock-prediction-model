@@ -63,8 +63,8 @@ def parser_args():
     )
 
     parser.add_argument("-niters", "--niters", default=10)   # The number of Gibbs sampling iterations
-    parser.add_argument("-twords", "--twords", default=15)  # The number of most likely words for each topic
-    parser.add_argument("-topics", "--topics", default=15)  # The number of topics
+    parser.add_argument("-twords", "--twords", default=10)  # The number of most likely words for each topic
+    parser.add_argument("-topics", "--topics", default=10)  # The number of topics
 
     parser.add_argument("-o", "--output", default="stock_index_text")
 
@@ -102,12 +102,12 @@ def read_company_list(path_company_list):
 # 뉴스 데이터 읽는 함수
 def read_csv(path_news, path_stock):
 
-    news_df = pd.read_csv(path_news, encoding="utf-8")    # news_df : output_morpological을 읽음
+    news_df = pd.read_csv(path_news, encoding="utf_8")    # news_df : output_morpological을 읽음
     file_names = path_stock.glob("*.csv")
 
     date = []
     for f in file_names:    # f는 파일 경로
-        stock_df = pd.read_csv(f, encoding="utf-8")  # df 가격 파일 데이터 가져오기
+        stock_df = pd.read_csv(f, encoding="utf_8")  # df 가격 파일 데이터 가져오기
         if len(stock_df) == 649:
             date.extend([int(t.replace("/", "")) for t in stock_df["Date"]])
 
@@ -215,14 +215,14 @@ def LDA(args, company_id, date_list, company_index_dict):
 
     topic_vector = []
     #for date in date_list:
-    for date in date_list[:5]:
-        print("date =", date)
+    for date in date_list:
+        #print("date =", date)
 
         # 3 (주가지수 수) X 10 (토픽 수)
         # 3 X 10 배열은 모두 0
         topic_vector_data = np.zeros((len(company_id), int(topics)))
         
-        print("topic_vector_data 3X10", topic_vector_data)
+        #print("topic_vector_data 3X10", topic_vector_data)
         path = path_vector / str(date)
 
         for j, v in enumerate(company_index_dict[date]):
@@ -232,38 +232,38 @@ def LDA(args, company_id, date_list, company_index_dict):
                 # LDA Model Execute
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
 
-    #             theta = []
-    #             # 토픽을 백터화 topic vector
-    #             with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
-    #                 for line in fin.readlines():
-    #                     row = []
-    #                     toks = line.split(" ")
-    #                     for tok in toks:
-    #                         print(tok)
-    #                         try:
-    #                             tok = float(tok)
-    #                         except ValueError:
-    #                             continue
+        #         theta = []
+        #         # 토픽을 백터화 topic vector
+        #         with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
+        #             for line in fin.readlines():
+        #                 row = []
+        #                 toks = line.split(" ")
+        #                 for tok in toks:
+        #                     #print(tok)
+        #                     try:
+        #                         tok = float(tok)
+        #                     except ValueError:
+        #                         continue
 
-    #                         row.append(tok)
-    #                     theta.append(row)
-    #             print("theta", theta)
-    #             theta = np.array(theta)
-    #             print("theta", theta)
-    #             topic_vector_data[j] = theta
-    #     print("topic_vector_data", topic_vector_data)
-    #     tmp = np.concatenate(topic_vector_data).reshape(
-    #         1, int(topics) * len(company_id)
-    #     )
-    #     print("tmp", tmp)
-    #     topic_vector.append(tmp)
+        #                     row.append(tok)
+        #                 theta.append(row)
+        #         #print("theta", theta)
+        #         theta = np.array(theta)
+        #         print("theta", theta)
+        #         topic_vector_data[j] = theta
+        # #print("topic_vector_data", topic_vector_data)
+        # tmp = np.concatenate(topic_vector_data).reshape(
+        #     1, int(topics) * len(company_id)
+        # )
+        # #print("tmp", tmp)
+        # topic_vector.append(tmp)
     
     # print("topic_vector", topic_vector)
     # topic_vector = np.concatenate(topic_vector)
     # print("topic_vector", topic_vector)
     # output(topic_vector, path_pkl + args.output)
 
-
+# LSTM을 위한 함수
 def output(data, path_output):
     #print(data, path_output)
     with open(path_output, "wb") as f:
@@ -276,50 +276,108 @@ def sentiment_analysis(path_sentiment):
     neutral = df[df['Sentiment'].str.contains('Neutra')].index
     df.drop(neutral, inplace=True)
     df.to_csv("./../../data/sentiment/out_put_sentiment.csv", index=False, encoding="utf-8")
-    print(df)
     return df
 
-def replace_topic(data_path, date_list, company_index_dict, company_list, sentiment_df):
+
+def replace_topic(args, date_list, company_index_dict, company_id, sentiment_df):    
     
-    
-    # for i, date in enumerate(date_list):
-    #     path = data_path / str(date)
-    #     print(path)
+    topics = args.topics
+    topic_vector = []
+    #for date in date_list:
+    for date in date_list:
+        path = path_vector / str(date)
+        topic_vector_data = np.zeros((len(company_id), int(topics)))
+        #print(topic_vector_data)
+        for j, v in enumerate(company_index_dict[date]):
+            if v != []:  # 기사에 해당되는 내용이 있을 경우
 
-    return sentiment_df
-
-
-# def make_absa(data_path, date_list, company_index_dict, company_list, news):
-
-#     for i, date in enumerate(date_list):
-
-#         path = data_path / str(date)
-#         print(path)
-
-#         # j = 회사 순서, v = 기사 index
-#         for j, v in enumerate(company_index_dict[date]):
-#             if v != []:
-#                 news_text = []
-#                 for idx in v:
-#                     news_text.append(news["Headlines"][idx])
-#                 # print(news_text)
+                twords = []
+                # 토픽 단어 가져오기
+                print(path / company_id[j] / "vector.txt.twords")
+                with open(path / company_id[j] / "vector.txt.twords", "r", encoding='utf_8', errors='ignore') as fin:
+                    topic_rank = 0
+                    word_list = []
+                    for line in fin.readlines():
+                        #print(line)
+                        toks = line.split("  ")
+                        if len(toks) == 1:
+                            topic_rank += 1
+                            word_list = []
+                        else:
+                            word = toks[0][1:]
+                            word_list.append(word)
+                            continue
+                        twords.append(word_list)
                     
-#                 articles_list = preprocessing_pyABSA(news_text)
-#                 #print(list)
+                # 토픽 단어 가져오기, 토픽을 csv로 저장하기
+                data = {}
+                for i, list in enumerate(twords):
+                    data["Topic " + str(i)] = list
+                df = pd.DataFrame(data)
+                path_topic = path / company_id[j] /  "topic.csv"
+                df.to_csv(path_topic, index=False, encoding="utf-8")
+                
+                # 날짜 형식 바꾸기
+                da = pd.to_datetime(str(date), format='%Y%m%d')
+                da = da.strftime('%Y-%m-%d')
 
-#                 file_out = open(
-#                     path / company_list[j] / "sentiment.txt", "w", encoding="utf_8"
-#                 )
-#                 for i in range(0, len(articles_list)):
-#                     file_out.write(str(articles_list[i]))
-#                     file_out.write("\n")
-#                 file_out.close()
+                # 백터 값 가져오기
+                theta = []
+                with open(path / company_id[j] / "vector.txt.theta", "r", encoding='utf_8', errors='ignore') as fin:
+                    for line in fin.readlines():
+                        topic_vec = []
+                        toks = line.split(" ")  # \n 지우기
+                        del toks[-1]
+                        #print(toks)
 
-#                 articles_list = list(chain(*articles_list))
-#                 path_sentiment = path / str(company_list[j]) / "sentiment.csv"
-#                 print(path_sentiment)
-#                 result = ABSA(articles_list, path_sentiment)
-#                 #print(result)
+                        for vec in toks:
+                            # try:
+                            vec = float(vec)
+                            # except ValueError:
+                            #     continue
+                            topic_vec.append(vec)
+
+
+                #print(topic_vec)
+
+                # match 시키기
+                for data in sentiment_df.values:
+                    aspect = data[0]
+                    sentiment = data[1]
+                    sentiment_date = data[2]
+                    if sentiment_date == da:
+                        # print(aspect , sentiment)
+
+                        for i, topic_num in enumerate(df):
+                            #print(df[k].values)
+                            for word in df[topic_num].values:
+                                #print(aspect)
+                                if word == aspect:
+                                    #print(aspect, sentiment, i)
+                                    if sentiment == "Positive":
+                                        topic_vec[i] = topic_vec[i] + 0.1
+                                    elif sentiment == "Negative":
+                                        topic_vec[i] = topic_vec[i] - 0.1
+
+
+                theta.append(topic_vec)
+                theta = np.array(theta)
+                #print("theta", theta)
+                #print(j)
+                #print(topic_vector_data)
+                
+                topic_vector_data[j] = theta
+        tmp = np.concatenate(topic_vector_data).reshape(
+            1, int(topics) * len(company_id)
+        )
+        topic_vector.append(tmp)
+        #print(topic_vector)
+
+    #print("topic_vector", topic_vector)
+    topic_vector = np.concatenate(topic_vector)
+    #print("topic_vector", topic_vector)
+    output(topic_vector, path_pkl + args.output)
+
 
 if __name__ == "__main__":
 
@@ -349,15 +407,11 @@ if __name__ == "__main__":
     make_folder(path_vector, date_list, company_index_dict, company_id, news)
 
     # LDA 실행
-    # LDA(args, company_id, date_list, company_index_dict)
+    LDA(args, company_id, date_list, company_index_dict)
     
     # ▼▼▼▼ABSA와 합치는 작업▼▼▼▼
-    #make_absa(path_vector, date_list[:20], company_index_dict, company_id, news)
     sentiment_df = sentiment_analysis(path_sentiment)
 
     # vector 값 바꾸는 함수
-    replace_topic(path_vector, date_list, company_index_dict, company_list, sentiment_df)
+    replace_topic(args, date_list, company_index_dict, company_id, sentiment_df)
 
-    # LDA 모델 만드는 함수
-
-    # ABSA(articles_list)

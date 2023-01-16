@@ -232,36 +232,6 @@ def LDA(args, company_id, date_list, company_index_dict):
                 # LDA Model Execute
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
 
-        #         theta = []
-        #         # 토픽을 백터화 topic vector
-        #         with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
-        #             for line in fin.readlines():
-        #                 row = []
-        #                 toks = line.split(" ")
-        #                 for tok in toks:
-        #                     #print(tok)
-        #                     try:
-        #                         tok = float(tok)
-        #                     except ValueError:
-        #                         continue
-
-        #                     row.append(tok)
-        #                 theta.append(row)
-        #         #print("theta", theta)
-        #         theta = np.array(theta)
-        #         print("theta", theta)
-        #         topic_vector_data[j] = theta
-        # #print("topic_vector_data", topic_vector_data)
-        # tmp = np.concatenate(topic_vector_data).reshape(
-        #     1, int(topics) * len(company_id)
-        # )
-        # #print("tmp", tmp)
-        # topic_vector.append(tmp)
-    
-    # print("topic_vector", topic_vector)
-    # topic_vector = np.concatenate(topic_vector)
-    # print("topic_vector", topic_vector)
-    # output(topic_vector, path_pkl + args.output)
 
 # LSTM을 위한 함수
 def output(data, path_output):
@@ -293,7 +263,7 @@ def replace_topic(args, date_list, company_index_dict, company_id, sentiment_df)
 
                 twords = []
                 # 토픽 단어 가져오기
-                print(path / company_id[j] / "vector.txt.twords")
+                # print(path / company_id[j] / "vector.txt.twords")
                 with open(path / company_id[j] / "vector.txt.twords", "r", encoding='utf_8', errors='ignore') as fin:
                     topic_rank = 0
                     word_list = []
@@ -355,9 +325,9 @@ def replace_topic(args, date_list, company_index_dict, company_id, sentiment_df)
                                 if word == aspect:
                                     #print(aspect, sentiment, i)
                                     if sentiment == "Positive":
-                                        topic_vec[i] = topic_vec[i] + 0.1
+                                        topic_vec[i] = topic_vec[i] + 0.5
                                     elif sentiment == "Negative":
-                                        topic_vec[i] = topic_vec[i] - 0.1
+                                        topic_vec[i] = topic_vec[i] - 0.5
 
 
                 theta.append(topic_vec)

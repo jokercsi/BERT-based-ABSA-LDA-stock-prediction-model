@@ -41,9 +41,9 @@ def estimate(
 ):
 
     net = StockPriceEstimator(
-        textual_dim=len(X_train_t[0]),
+        #textual_dim=len(X_train_t[0]),
         numerical_dim=len(X_train_n[0]),
-        dense_out_dim=int(len(X_train_t[0]) / 2),
+        #dense_out_dim=int(len(X_train_t[0]) / 2),
         lstm_out_dim=len(X_train_n[0]),
     ).to(device)
     optimizer = optim.Adam(net.parameters())
@@ -92,19 +92,28 @@ def train(args):
     scaler_x_val = MinMaxScaler()
     scaler_y_val = MinMaxScaler()
 
+    # X_train_t 훈련 아마 토픽 데이터? 
+    # X_train_n 훈련 가격 데이터 (Open)
+    # y_train 훈련 가격 데이터 (Close)
+    # X_val_t 검증 아마 토픽 데이터? 
+    # X_val_n 검증 가격 데이터 (Open)
+    # y_val 검증 가격 데이터 (Close) 
+    # data_load 함수는 lstm 파일에 있다.
     X_train_t, X_train_n, y_train, X_val_t, X_val_n, y_val, _, _, _ = data_load(
         path_pkl + args.text, path_pkl + args.num
     )
 
+    # 가격 데이터의 MinMaxScaler
     X_train_n = scaler_x_train.fit_transform(X_train_n)
     y_train = scaler_y_train.fit_transform(y_train)
     X_val_n = scaler_x_val.fit_transform(X_val_n)
     y_val = scaler_y_val.fit_transform(y_val)
 
+    # LSTM 파일
     estimated_lstm = StockPriceEstimator(
-        textual_dim=len(X_train_t[0]),
+        #textual_dim=len(X_train_t[0]),
         numerical_dim=len(X_train_n[0]),
-        dense_out_dim=int(len(X_train_t[0]) / 2),
+        #dense_out_dim=int(len(X_train_t[0]) / 2),
         lstm_out_dim=len(X_train_n[0]),
     ).to(device)
 
@@ -121,7 +130,7 @@ def train(args):
     batch_size = args.batch_size
 
     # lstm 학습 결과가 저장 되는 곳
-    # path_model + args.estimated_model = ./../../data/model/long/estimated_car.model
+    # path_model + args.estimated_model = ./../../data/model/long/estimated.model
     estimate(
         X_train_n,
         X_train_t,
@@ -200,6 +209,8 @@ def train(args):
 
 if __name__ == "__main__":
     args = parser_args()
-    # print(path_model + args.estimated_model)
-    # print(torch.load(path_model + args.estimated_model))
+    
     train(args)
+    # print(path_model + args.estimated_model) # ./../../data/model/long/estimated.model
+    # torch.load: pickle을 사용하여 저장된 객체 파일들을 역직렬화하여 메모리에 올립니다.
+    # print(torch.load(path_model + args.estimated_model))

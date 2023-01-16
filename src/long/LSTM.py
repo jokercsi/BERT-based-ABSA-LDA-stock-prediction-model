@@ -66,7 +66,7 @@ def prepare_data(seq_len, batch_idx, X_data, device):
 class StockPriceEstimator(nn.Module):
     def __init__(
         self,
-        textual_dim=1000,
+        #textual_dim=1000,
         numerical_dim=10,
         dense_out_dim=500,
         lstm_out_dim=10,
@@ -74,11 +74,11 @@ class StockPriceEstimator(nn.Module):
         drop_out=0.5,
     ):
         super(StockPriceEstimator, self).__init__()
-        self.dense_text = nn.Linear(textual_dim, dense_out_dim)
+        #self.dense_text = nn.Linear(textual_dim, dense_out_dim)
         self.dense_numeric = nn.Linear(numerical_dim, dense_out_dim)
 
         self.lstm = nn.LSTM(
-            dense_out_dim * 2,
+            dense_out_dim ,
             lstm_out_dim,
             num_layers=lstm_num_layers,
             dropout=drop_out,
@@ -88,18 +88,18 @@ class StockPriceEstimator(nn.Module):
     def forward(self, text_vectors, numeric_vectors):
         text_dense_outs = []
         numeric_dense_outs = []
-        for i in range(text_vectors.size(0)):
-            temp_out = self.dense_text(text_vectors[i])
-            text_dense_outs.append(temp_out)
+        # for i in range(text_vectors.size(0)):
+        #     temp_out = self.dense_text(text_vectors[i])
+        #     text_dense_outs.append(temp_out)
 
         for i in range(numeric_vectors.size(0)):
             temp_out = self.dense_numeric(numeric_vectors[i])
             numeric_dense_outs.append(temp_out)
 
-        text_dense_outs = torch.stack(text_dense_outs, dim=0)
+        #text_dense_outs = torch.stack(text_dense_outs, dim=0)
         numeric_dense_outs = torch.stack(numeric_dense_outs, dim=0)
 
-        dense_outs = torch.cat([text_dense_outs, numeric_dense_outs], dim=-1)
+        dense_outs = torch.cat([ numeric_dense_outs], dim=-1)
         out, hidden = self.lstm(dense_outs)
 
         return out[-1], out

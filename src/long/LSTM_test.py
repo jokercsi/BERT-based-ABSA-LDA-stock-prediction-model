@@ -123,6 +123,7 @@ def trade(predict_price, open_price, low_price, high_price, close_price):
 
     predict_change = (predict_price - open_price) / open_price
     returns = np.zeros(predict_change.shape)
+    fees = 20
 
     for i in range(predict_change.shape[1]):
         for j in range(predict_change.shape[0]):
@@ -130,23 +131,23 @@ def trade(predict_price, open_price, low_price, high_price, close_price):
                 if high_price[j, i] >= open_price[j, i] * 1.02:
                     returns[j, i] += (
                         (open_price[j, i] * 0.02) * (1000000 / open_price[j, i])
-                    ) - 535
+                    ) - fees
                 else:
                     returns[j, i] += (
                         (-open_price[j, i] + close_price[j, i])
                         * (1000000 / open_price[j, i])
-                    ) - 535
+                    ) - fees
 
             elif predict_change[j, i] < 0:
                 if low_price[j, i] <= open_price[j, i] * 0.98:
                     returns[j, i] += (
                         (open_price[j, i] * 0.02) * (1000000 / open_price[j, i])
-                    ) - 385
+                    ) - fees
                 else:
                     returns[j, i] += (
                         (open_price[j, i] - close_price[j, i])
                         * (1000000 / open_price[j, i])
-                    ) - 385
+                    ) - fees
 
     return sum(returns)
 
@@ -158,17 +159,18 @@ def result(predict_price, seq_len, path_num, path_stock, path_graph):
     # test_data_load 함수
     open_price, low_price, high_price, close_price = test_data_load(path_num)
 
-    print(open_price, low_price, high_price, close_price)
+    #print(open_price, low_price, high_price, close_price)
 
     open_price = open_price[(seq_len - 1) :]
     low_price = low_price[(seq_len - 1) :]
     high_price = high_price[(seq_len - 1) :]
     close_price = close_price[(seq_len - 1) :]
 
-    print(open_price, low_price, high_price, close_price)
+    #print(open_price, low_price, high_price, close_price)
 
     mcfd_result = mcfd(predict_price, close_price)  # mcfd 함수 가져오기
     mftr_result = mftr(predict_price, close_price)  # mftr 함수 가져오기
+    
     # trade 함수 가져오기
     trade_result = trade(predict_price, open_price, low_price, high_price, close_price)
 
@@ -207,9 +209,9 @@ def test(args):
     # print(X_test_n, y_test) # LFTM
 
     estimated_lstm = StockPriceEstimator(
-        textual_dim=len(X_test_t[0]),
+        #textual_dim=len(X_test_t[0]),
         numerical_dim=len(X_test_n[0]),
-        dense_out_dim=int(len(X_test_t[0]) / 2),
+        #dense_out_dim=int(len(X_test_t[0]) / 2),
         lstm_out_dim=len(X_test_n[0]),
     ).to(device)
 

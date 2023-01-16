@@ -41,9 +41,9 @@ def estimate(
 ):
 
     net = StockPriceEstimator(
-        #textual_dim=len(X_train_t[0]),
+        textual_dim=len(X_train_t[0]),
         numerical_dim=len(X_train_n[0]),
-        #dense_out_dim=int(len(X_train_t[0]) / 2),
+        dense_out_dim=int(len(X_train_t[0]) / 2),
         lstm_out_dim=len(X_train_n[0]),
     ).to(device)
     optimizer = optim.Adam(net.parameters())
@@ -111,9 +111,9 @@ def train(args):
 
     # LSTM 파일
     estimated_lstm = StockPriceEstimator(
-        #textual_dim=len(X_train_t[0]),
+        textual_dim=len(X_train_t[0]),
         numerical_dim=len(X_train_n[0]),
-        #dense_out_dim=int(len(X_train_t[0]) / 2),
+        dense_out_dim=int(len(X_train_t[0]) / 2),
         lstm_out_dim=len(X_train_n[0]),
     ).to(device)
 

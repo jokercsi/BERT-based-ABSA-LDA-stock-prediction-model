@@ -209,9 +209,9 @@ def test(args):
     # print(X_test_n, y_test) # LFTM
 
     estimated_lstm = StockPriceEstimator(
-        #textual_dim=len(X_test_t[0]),
+        textual_dim=len(X_test_t[0]),
         numerical_dim=len(X_test_n[0]),
-        #dense_out_dim=int(len(X_test_t[0]) / 2),
+        dense_out_dim=int(len(X_test_t[0]) / 2),
         lstm_out_dim=len(X_test_n[0]),
     ).to(device)
 

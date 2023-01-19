@@ -130,23 +130,23 @@ def trade(predict_price, open_price, low_price, high_price, close_price):
             if predict_change[j, i] >= 0:
                 if high_price[j, i] >= open_price[j, i] * 1.02:
                     returns[j, i] += (
-                        (open_price[j, i] * 0.02) * (1000000 / open_price[j, i])
+                        (open_price[j, i] * 0.02) * (100000 / open_price[j, i])
                     ) - fees
                 else:
                     returns[j, i] += (
                         (-open_price[j, i] + close_price[j, i])
-                        * (1000000 / open_price[j, i])
+                        * (100000 / open_price[j, i])
                     ) - fees
 
             elif predict_change[j, i] < 0:
                 if low_price[j, i] <= open_price[j, i] * 0.98:
                     returns[j, i] += (
-                        (open_price[j, i] * 0.02) * (1000000 / open_price[j, i])
+                        (open_price[j, i] * 0.02) * (100000 / open_price[j, i])
                     ) - fees
                 else:
                     returns[j, i] += (
                         (open_price[j, i] - close_price[j, i])
-                        * (1000000 / open_price[j, i])
+                        * (100000 / open_price[j, i])
                     ) - fees
 
     return sum(returns)
@@ -189,6 +189,21 @@ def result(predict_price, seq_len, path_num, path_stock, path_graph):
 
         file_name = company + ".png"
         plt.savefig(path_graph / file_name, dpi=300)
+
+        # nasdaq 확인
+        #diff = predict_price[:, i]-close_price[:, i]
+        #print(close_price[:, i])
+        # if i == 1:
+        #     for n,j in enumerate(diff):
+        #         if j > 400:
+        #             print(n, j)
+        plt.figure(figsize=(15, 8), dpi=300)
+        plt.stem(predict_price[:, i]-close_price[:, i], label="predict_price")
+        plt.xlabel("day")
+        plt.ylabel("Predicted Price - Actual Price")
+
+        file_name_diff = company + "diff.png"
+        plt.savefig(path_graph / file_name_diff, dpi=300)
 
 
 # MAIN 함수에서 불러 들이키는 함수

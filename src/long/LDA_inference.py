@@ -231,6 +231,29 @@ def LDA(args, company_id, date_list, company_index_dict):
                 tests = test + str(date) + "/" + company_id[j] + "/vector.txt"
                 # LDA Model Execute
                 LDA_inf(path_lda, train, model, niters, twords, tests, path_return)
+    #             theta = []
+
+    #             with open(path / company_id[j] / "vector.txt.theta", "r") as fin:
+    #                 for line in fin.readlines():
+    #                     row = []
+    #                     toks = line.split(" ")
+    #                     for tok in toks:
+    #                         try:
+    #                             tok = float(tok)
+    #                         except ValueError:
+    #                             continue
+
+    #                         row.append(tok)
+    #                     theta.append(row)
+    #             theta = np.array(theta)
+    #             topic_vector_data[j] = theta
+
+    #     tmp = np.concatenate(topic_vector_data).reshape(
+    #         1, int(topics) * len(company_id)
+    #     )
+    #     topic_vector.append(tmp)
+    # topic_vector = np.concatenate(topic_vector)
+    # output(topic_vector, path_pkl + args.output)
 
 
 # LSTM을 위한 함수
